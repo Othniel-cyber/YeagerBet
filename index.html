@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YeagerBet - Authentification</title>
+    <link rel="icon" type="image/png" href="logo.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      :root {
+        --bg-main: #070b14;
+        --bg-card: #0d1627;
+        --border-color: #1e293b;
+        --accent-pink: #ff0055;
+        --accent-cyan: #00e5ff;
+        --text-main: #f8fafc;
+        --text-muted: #64748b;
+      }
+      body {
+        background-color: var(--bg-main);
+        color: var(--text-main);
+        font-family: "Segoe UI", system-ui, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        background-image: radial-gradient(
+          circle at 50% 50%,
+          #101b30 0%,
+          #070b14 100%
+        );
+      }
+      .auth-container {
+        width: 100%;
+        max-width: 420px;
+        padding: 20px;
+      }
+      .brand-header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .brand-header h1 {
+        font-size: 2.2rem;
+        font-weight: 800;
+        letter-spacing: 2px;
+        margin: 0;
+        color: #fff;
+      }
+      .brand-header h1 span {
+        color: var(--accent-pink);
+        text-shadow: 0 0 15px rgba(255, 0, 85, 0.4);
+      }
+      .brand-header p {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        margin: 5px 0 0 0;
+      }
+      .auth-card {
+        background: var(--bg-card);
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      }
+      .hidden {
+        display: none !important;
+      }
+      .auth-card h2 {
+        margin-top: 0;
+        margin-bottom: 25px;
+        font-size: 1.3rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .input-group {
+        margin-bottom: 20px;
+      }
+      .input-group label {
+        display: block;
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+      .input-wrapper i.prefix-icon {
+        position: absolute;
+        left: 14px;
+        color: var(--text-muted);
+      }
+      .input-wrapper input,
+      .input-wrapper select {
+        width: 100%;
+        background: #050911;
+        border: 1px solid var(--border-color);
+        padding: 12px 40px;
+        border-radius: 8px;
+        color: #fff;
+        font-size: 0.95rem;
+        outline: none;
+        box-sizing: border-box;
+      }
+      .input-wrapper select {
+        padding-left: 40px;
+        cursor: pointer;
+        appearance: none;
+      }
+      .btn-auth-action {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(90deg, var(--accent-pink), #bd003e);
+        border: none;
+        border-radius: 8px;
+        color: #fff;
+        font-size: 1rem;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+      .btn-auth-action:hover {
+        box-shadow: 0 0 15px rgba(255, 0, 85, 0.3);
+      }
+      .auth-switch {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+      }
+      .auth-switch a {
+        color: var(--accent-cyan);
+        text-decoration: none;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="auth-container">
+      <div class="brand-header">
+        <h1>YEAGER<span>BET</span></h1>
+        <p>La plateforme ultime de jeux exclusifs au Bénin</p>
+      </div>
+
+      <div class="auth-card" id="register-box">
+        <h2>
+          <i
+            class="fa-solid fa-user-plus"
+            style="color: var(--accent-pink)"
+          ></i>
+          Créer un compte
+        </h2>
+        <form id="register-form">
+          <div class="input-group">
+            <label for="reg-username">Nom d'utilisateur / Pseudo</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-user prefix-icon"></i>
+              <input
+                type="text"
+                id="reg-username"
+                placeholder="Ex: Déodat"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="reg-network">Choisir votre Réseau Mobile</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-tower-cell prefix-icon"></i>
+              <select id="reg-network" required>
+                <option value="" disabled selected hidden>
+                  Sélectionnez un réseau...
+                </option>
+                <option value="MTN">MTN MoMo</option>
+                <option value="Moov">Moov Money</option>
+                <option value="Celtiis">Celtiis Cash</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="reg-phone">Numéro de téléphone Bénin</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-phone prefix-icon"></i>
+              <input
+                type="tel"
+                id="reg-phone"
+                placeholder="Ex: 01xxxxxxxx"
+                maxlength="10"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="reg-password">Mot de passe</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-lock prefix-icon"></i>
+              <input
+                type="password"
+                id="reg-password"
+                placeholder="••••••••"
+                required
+              />
+            </div>
+          </div>
+
+          <button type="submit" class="btn-auth-action">
+            S'INSCRIRE SUR YEAGERBET
+          </button>
+        </form>
+        <div class="auth-switch">
+          Déjà inscrit ? <a href="#" id="go-to-login">Se connecter</a>
+        </div>
+      </div>
+
+      <div class="auth-card hidden" id="login-box">
+        <h2>
+          <i
+            class="fa-solid fa-right-to-bracket"
+            style="color: var(--accent-cyan)"
+          ></i>
+          Connexion
+        </h2>
+        <form id="login-form">
+          <div class="input-group">
+            <label for="login-phone">Numéro de téléphone</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-phone prefix-icon"></i>
+              <input
+                type="tel"
+                id="login-phone"
+                placeholder="Entrez votre numéro"
+                maxlength="10"
+                required
+              />
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="login-password">Mot de passe</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-lock prefix-icon"></i>
+              <input
+                type="password"
+                id="login-password"
+                placeholder="Entrez votre mot de passe"
+                required
+              />
+            </div>
+          </div>
+          <button
+            type="submit"
+            class="btn-auth-action"
+            style="
+              background: linear-gradient(90deg, var(--accent-cyan), #00b4cc);
+              color: #000;
+            "
+          >
+            ACCÉDER AU DASHBOARD
+          </button>
+        </form>
+        <div class="auth-switch">
+          Nouveau ? <a href="#" id="go-to-register">Créer un compte</a>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const registerBox = document.getElementById("register-box");
+      const loginBox = document.getElementById("login-box");
+      const goToLogin = document.getElementById("go-to-login");
+      const goToRegister = document.getElementById("go-to-register");
+
+      goToLogin.addEventListener("click", (e) => {
+        e.preventDefault();
+        registerBox.classList.add("hidden");
+        loginBox.classList.remove("hidden");
+      });
+      goToRegister.addEventListener("click", (e) => {
+        e.preventDefault();
+        loginBox.classList.add("hidden");
+        registerBox.classList.remove("hidden");
+      });
+
+      document
+        .getElementById("register-form")
+        .addEventListener("submit", (e) => {
+          e.preventDefault();
+          const username = document.getElementById("reg-username").value.trim();
+          const network = document.getElementById("reg-network").value;
+          const phone = document.getElementById("reg-phone").value.trim();
+          const password = document.getElementById("reg-password").value;
+
+          let accounts =
+            JSON.parse(localStorage.getItem("yb_registered_accounts")) || [];
+          if (accounts.some((acc) => acc.phone === phone)) {
+            alert("Ce numéro est déjà utilisé.");
+            return;
+          }
+
+          // Sauvegarde avec le réseau choisi
+          accounts.push({ username, phone, password, network });
+          localStorage.setItem(
+            "yb_registered_accounts",
+            JSON.stringify(accounts),
+          );
+
+          // Log Admin
+          let adminUsers = JSON.parse(localStorage.getItem("yb_users")) || [];
+          let now = new Date();
+          adminUsers.push({
+            username,
+            phone: `${phone} [${network}]`,
+            dateJoin:
+              now.toLocaleDateString("fr-FR") +
+              " à " +
+              now.toLocaleTimeString("fr-FR", {
+                hour: "2-digit",
+                minute: "2-digit",
+              }),
+          });
+          localStorage.setItem("yb_users", JSON.stringify(adminUsers));
+
+          alert("Compte créé !");
+          registerBox.classList.add("hidden");
+          loginBox.classList.remove("hidden");
+          document.getElementById("register-form").reset();
+        });
+
+      document.getElementById("login-form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const phone = document.getElementById("login-phone").value.trim();
+        const password = document.getElementById("login-password").value;
+        let accounts =
+          JSON.parse(localStorage.getItem("yb_registered_accounts")) || [];
+        const verifiedAccount = accounts.find(
+          (acc) => acc.phone === phone && acc.password === password,
+        );
+
+        if (verifiedAccount) {
+          localStorage.setItem(
+            "yb_active_user",
+            JSON.stringify(verifiedAccount),
+          );
+          window.location.href = "dashboard.html";
+        } else {
+          alert("Ce compte n'existe pas ou informations erronées !");
+        }
+      });
+    </script>
+  </body>
+</html>

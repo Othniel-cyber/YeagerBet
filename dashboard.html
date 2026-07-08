@@ -1,0 +1,1680 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YeagerBet - Tableau de Bord</title>
+    <link rel="icon" type="image/png" href="logo.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.fedapay.com/checkout.js?v=1.1.7"></script>
+  </head>
+  <body class="dashboard-body">
+    <header class="navbar">
+      <div class="nav-left">
+        <h1 class="logo-dash">
+          <i class="fa-solid fa-shield-halved"></i> Yeager<span>Bet</span>
+        </h1>
+      </div>
+      <span id="nav-username">Invité</span>
+      <div class="nav-right">
+        <div class="wallet-display">
+          <i class="fa-solid fa-wallet"></i> Solde:
+          <span id="user-balance">0</span> FCFA
+        </div>
+        <button class="btn-deposit" id="open-deposit-btn">
+          <i class="fa-solid fa-plus"></i> Dépôt
+        </button>
+        <button
+          id="open-withdraw-btn"
+          class="btn-withdraw"
+          style="
+            background: linear-gradient(90deg, #ef4444, #b91c1c);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 10px;
+          "
+        >
+          <i class="fa-solid fa-money-bill-transfer"></i> Retrait
+        </button>
+        <a href="index.html" class="btn-logout"
+          ><i class="fa-solid fa-power-off"></i
+        ></a>
+      </div>
+    </header>
+
+    <div class="main-layout">
+      <aside class="sidebar">
+        <p class="sidebar-title">Jeux Exclusifs</p>
+        <nav class="sidebar-menu">
+          <button class="menu-item active" data-game="pulse">
+            <i class="fa-solid fa-bolt"></i> Quantum Pulse
+          </button>
+          <button class="menu-item" data-game="arena">
+            <i class="fa-solid fa-khanda"></i> Manga Arena
+            <span class="badge-hot">VIRTUAL</span>
+          </button>
+          <button class="menu-item" data-game="crash">
+            <i class="fa-solid fa-chart-line"></i> CyberCrash
+            <span class="badge-hot">HOT</span>
+          </button>
+          <button class="menu-item" data-game="grid">
+            <i class="fa-solid fa-table-cells"></i> Binary Grid
+          </button>
+          <button class="menu-item" data-game="firewall">
+            <i class="fa-solid fa-server"></i> Firewall Breaker
+            <span
+              class="badge-hot"
+              style="
+                background: #ff0055;
+                color: #fff;
+                font-size: 0.65rem;
+                padding: 2px 5px;
+                border-radius: 4px;
+                margin-left: auto;
+              "
+              >NEW</span
+            >
+          </button>
+          <button class="menu-item" data-game="datashield">
+            <i class="fa-solid fa-circle-radiation"></i> Data Shield
+            <span
+              class="badge-hot"
+              style="
+                background: #ffbb00;
+                color: #000;
+                font-size: 0.65rem;
+                padding: 2px 5px;
+                border-radius: 4px;
+                margin-left: auto;
+                font-weight: bold;
+              "
+              >LIVE</span
+            >
+          </button>
+          <button class="menu-item" data-game="plinko">
+            <i class="fa-solid fa-circle-nodes"></i> Cyber-Plinko
+            <span class="badge-hot" style="background: #ff0055">NEW</span>
+          </button>
+          <button class="menu-item" data-game="shell">
+            <i class="fa-solid fa-cubes"></i> Cyber-Shell
+            <span class="badge-hot" style="background: #a855f7; color: #fff"
+              >NEW</span
+            >
+          </button>
+          <button class="menu-item" data-game="heist">
+            <i class="fa-solid fa-vault"></i> Cyber-Heist
+            <span
+              class="badge-hot"
+              style="
+                background: linear-gradient(45deg, #ff0055, #a855f7);
+                color: #fff;
+                box-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
+              "
+              >PREMIUM</span
+            >
+          </button>
+          <button class="menu-item" data-game="vector">
+            <i class="fa-solid fa-crosshairs"></i> Cyber-Vector
+            <span
+              class="badge-hot"
+              style="
+                background: #00e5ff;
+                color: #000;
+                font-weight: bold;
+                box-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
+              "
+              >ULTRA</span
+            >
+          </button>
+        </nav>
+      </aside>
+
+      <main class="game-zone">
+        <div class="game-container" id="game-pulse">
+          <h2><i class="fa-solid fa-bolt"></i> Quantum Pulse</h2>
+          <p class="game-desc">
+            Anticipez la polarité de la prochaine impulsion d'énergie. Doublez
+            votre mise !
+          </p>
+
+          <div class="pulse-arena">
+            <div class="pulse-display" id="pulse-core-zone">
+              <div class="pulse-core" id="pulse-energy-ball"></div>
+              <div id="pulse-timer-text">5s</div>
+              <div id="pulse-status-text">Stabilisation du noyau...</div>
+            </div>
+
+            <div class="pulse-controls">
+              <div class="input-group font-dash-input">
+                <label for="pulse-bet-amount">Mise (FCFA) :</label>
+                <input
+                  type="number"
+                  id="pulse-bet-amount"
+                  min="100"
+                  value="100"
+                />
+              </div>
+
+              <label class="control-label">Sélectionnez la polarité :</label>
+              <div class="pulse-buttons">
+                <button
+                  class="btn-pulse-choice btn-red"
+                  id="btn-pulse-red"
+                  data-choice="red"
+                >
+                  <i class="fa-solid fa-fire"></i> Impulsion Rouge
+                </button>
+                <button
+                  class="btn-pulse-choice btn-blue"
+                  id="btn-pulse-blue"
+                  data-choice="blue"
+                >
+                  <i class="fa-solid fa-snowflake"></i> Impulsion Bleue
+                </button>
+              </div>
+
+              <div id="pulse-bet-status" class="bet-status-msg">
+                Aucun pari placé pour cette impulsion
+              </div>
+            </div>
+          </div>
+
+          <div class="pulse-history">
+            <span>Derniers flux :</span>
+            <div class="pulse-badges" id="pulse-history-badges"></div>
+          </div>
+        </div>
+
+        <!-- Manga Arena -->
+        <!--==============================================-->
+        <div class="game-container hidden" id="game-arena">
+          <div class="ma-header-banner">
+            <div>
+              <h2 class="game-title">
+                <i class="fa-solid fa-khanda"></i> Manga Arena Virtuel
+              </h2>
+              <p class="game-desc">
+                Combinez les affrontements des plus grands guerriers. Sessions
+                de 2 rounds en 2 minutes.
+              </p>
+            </div>
+            <div class="ma-timer-badge">
+              <span id="ma-timer-status">PARIS OUVERTS</span>
+              <strong id="ma-countdown">02:00</strong>
+            </div>
+          </div>
+
+          <div
+            class="ma-tabs-nav"
+            style="
+              display: flex;
+              gap: 10px;
+              margin-bottom: 15px;
+              border-bottom: 1px solid #1e293b;
+              padding-bottom: 10px;
+            "
+          >
+            <button
+              type="button"
+              class="ma-tab-btn active"
+              id="ma-tab-all-games"
+            >
+              Tous les Combats
+            </button>
+            <button type="button" class="ma-tab-btn" id="ma-tab-my-live">
+              Mon Pari En Direct
+              <span
+                id="ma-live-indicator"
+                class="hidden"
+                style="color: #ffaa00; font-size: 0.75rem"
+                >●</span
+              >
+            </button>
+            <button type="button" class="ma-tab-btn" id="ma-tab-history">
+              Historique des Coupons
+            </button>
+          </div>
+
+          <div class="ma-grid-layout">
+            <div class="ma-matches-list-wrapper">
+              <div class="ma-sub-view" id="ma-view-all">
+                <div class="ma-matches-grid" id="ma-dynamic-matches"></div>
+              </div>
+
+              <div class="ma-sub-view hidden" id="ma-view-live-tracking">
+                <div id="ma-no-live-msg" class="ma-empty-msg">
+                  Aucun combat actif sélectionné dans votre coupon pour cette
+                  session.
+                </div>
+                <div class="ma-matches-grid" id="ma-live-tracked-matches"></div>
+              </div>
+
+              <div class="ma-sub-view hidden" id="ma-view-history">
+                <div id="ma-no-history-msg" class="ma-empty-msg">
+                  Aucun coupon archivé pour le moment.
+                </div>
+                <div
+                  class="ma-history-list"
+                  id="ma-history-container"
+                  style="display: flex; flex-direction: column; gap: 15px"
+                ></div>
+              </div>
+            </div>
+
+            <div class="ma-coupon-wrapper">
+              <div class="ma-coupon-card">
+                <h3><i class="fa-solid fa-receipt"></i> Coupon Arena</h3>
+                <div class="ma-selected-bets" id="ma-coupon-selections">
+                  <p class="ma-empty-msg">
+                    Aucun combat sélectionné. Cliquez sur une cote pour
+                    commencer votre combiné.
+                  </p>
+                </div>
+
+                <div class="ma-coupon-summary">
+                  <div class="ma-summary-row">
+                    <span>Cote Totale :</span>
+                    <strong id="ma-total-cote">1.00</strong>
+                  </div>
+                  <div class="input-group font-dash-input">
+                    <label for="ma-stake">Mise Totale (FCFA) :</label>
+                    <input type="number" id="ma-stake" min="200" value="200" />
+                  </div>
+                  <div class="ma-summary-row ma-gain-row">
+                    <span>Gain Potentiel :</span>
+                    <strong id="ma-potential-win">0 F</strong>
+                  </div>
+                  <button
+                    type="button"
+                    class="btn-crash-action"
+                    id="btn-ma-submit-coupon"
+                    style="width: 100%; margin-top: 10px"
+                  >
+                    PLACER LE PARI COMBINÉ
+                  </button>
+                  <button
+                    type="button"
+                    class="ma-clear-btn"
+                    id="btn-ma-clear-coupon"
+                    style="
+                      width: 100%;
+                      margin-top: 5px;
+                      background: transparent;
+                      border: 1px solid #334155;
+                      color: #94a3b8;
+                      padding: 6px;
+                      border-radius: 4px;
+                      cursor: pointer;
+                      font-size: 0.8rem;
+                    "
+                  >
+                    Vider le coupon
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Crash -->
+        <!--============================================== -->
+        <div class="game-container hidden" id="game-crash">
+          <h2><i class="fa-solid fa-chart-line"></i> CyberCrash Special</h2>
+          <p class="game-desc">
+            Le crash imprévisible et ultra-rapide. Retirez votre argent avant le
+            bug système !
+          </p>
+
+          <div class="crash-arena">
+            <div class="crash-graph" id="crash-arena-zone">
+              <div class="manga-portal" id="portal-animation"></div>
+              <div id="crash-multiplier">1.00x</div>
+              <div id="crash-status-text">
+                Attente de la prochaine faille...
+              </div>
+            </div>
+
+            <div class="crash-controls">
+              <div class="input-group font-dash-input">
+                <label for="crash-bet-amount">Mise (FCFA) :</label>
+                <input
+                  type="number"
+                  id="crash-bet-amount"
+                  min="100"
+                  value="100"
+                />
+              </div>
+
+              <button class="btn-crash-action" id="btn-crash-start">
+                Placer la mise
+              </button>
+              <button
+                class="btn-crash-action btn-cashout hidden"
+                id="btn-crash-cashout"
+              >
+                CASH OUT
+              </button>
+            </div>
+          </div>
+
+          <div class="crash-history">
+            <span>Historique :</span>
+            <div class="history-badges" id="crash-history-badges">
+              <span class="badge-hist green">2.34x</span>
+              <span class="badge-hist red">1.05x</span>
+              <span class="badge-hist green">5.80x</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="game-container hidden" id="game-grid">
+          <h2 class="game-title">
+            <i class="fa-solid fa-table-cells"></i> Binary Grid
+          </h2>
+          <p class="game-desc">
+            Découvrez les lignes de code valides (1) et évitez les bugs système
+            (0) pour augmenter votre multiplicateur !
+          </p>
+
+          <div class="bg-main-layout">
+            <div class="bg-controls">
+              <div class="input-group font-dash-input">
+                <label for="bg-bet-amount">Mise (FCFA) :</label>
+                <input type="number" id="bg-bet-amount" min="100" value="100" />
+              </div>
+
+              <div class="input-group font-dash-input">
+                <label for="bg-bugs-select">Nombre de Bugs (0) :</label>
+                <select id="bg-bugs-select">
+                  <option value="2">2 Bugs (Easy - Multiplier: x1.08)</option>
+                  <option value="3" selected>
+                    3 Bugs (Medium - Multiplier: x1.13)
+                  </option>
+                  <option value="4">4 Bugs (Hard - Multiplier: x1.19)</option>
+                  <option value="5">5 Bugs (Expert - Multiplier: x1.25)</option>
+                </select>
+              </div>
+
+              <div class="bg-multiplier-box">
+                Multiplier : <span id="bg-current-multiplier">1.00x</span>
+              </div>
+
+              <button class="btn-crash-action" id="btn-bg-start">
+                DÉMARRER LA SESSION
+              </button>
+              <button
+                class="btn-crash-action btn-green hidden"
+                id="btn-bg-cashout"
+              >
+                PRENDRE LES GAINS
+              </button>
+            </div>
+
+            <div class="pixel-bg-grid" id="pixel-bg-grid"></div>
+          </div>
+        </div>
+
+        <div class="game-container hidden" id="game-firewall">
+          <h2 class="game-title">
+            <i class="fa-solid fa-shield-halved"></i> Firewall Breaker
+          </h2>
+          <p class="game-desc">
+            Bypass the security layers! Choose 1 port to climb up. Watch out for
+            the System Alert!
+          </p>
+
+          <div class="fw-main-layout">
+            <div class="fw-controls">
+              <div class="input-group font-dash-input">
+                <label for="fw-bet-amount">Mise (FCFA) :</label>
+                <input type="number" id="fw-bet-amount" min="100" value="100" />
+              </div>
+
+              <div class="fw-multiplier-box">
+                Multiplier : <span id="fw-current-multiplier">1.00x</span>
+              </div>
+
+              <div class="fw-status-box">
+                Next Floor :
+                <span id="fw-next-multiplier" style="color: #00e5ff"
+                  >x1.45</span
+                >
+              </div>
+
+              <button class="btn-crash-action" id="btn-fw-start">
+                START HACKING
+              </button>
+              <button
+                class="btn-crash-action btn-green hidden"
+                id="btn-fw-cashout"
+              >
+                TAKE WINNINGS (CASHOUT)
+              </button>
+            </div>
+
+            <div class="fw-tower-container" id="fw-tower"></div>
+          </div>
+        </div>
+
+        <!--Firewall-->
+        <!--==============================================-->
+
+        <div class="game-container hidden" id="game-datashield">
+          <h2 class="game-title">
+            <i class="fa-solid fa-circle-notch"></i> Data Shield
+          </h2>
+          <p class="game-desc">
+            Launch the system scan! Avoid the Red Segments (Data Corruption) to
+            multiplicate your stake!
+          </p>
+
+          <div class="ds-main-layout">
+            <div class="ds-controls">
+              <div class="input-group font-dash-input">
+                <label for="ds-bet-amount">Mise (FCFA) :</label>
+                <input type="number" id="ds-bet-amount" min="200" value="200" />
+              </div>
+
+              <div
+                class="ds-quick-bets"
+                style="
+                  display: flex;
+                  gap: 8px;
+                  margin-top: -5px;
+                  margin-bottom: 10px;
+                "
+              >
+                <button
+                  type="button"
+                  onclick="document.getElementById('ds-bet-amount').value = 200"
+                  style="
+                    flex: 1;
+                    background: #1e293b;
+                    border: 1px solid #334155;
+                    color: #fff;
+                    font-size: 0.75rem;
+                    padding: 6px;
+                    cursor: pointer;
+                    border-radius: 4px;
+                    font-weight: bold;
+                  "
+                >
+                  MIN
+                </button>
+                <button
+                  type="button"
+                  onclick="
+                    let i = document.getElementById('ds-bet-amount');
+                    i.value = Math.max(200, Math.floor(i.value * 2));
+                  "
+                  style="
+                    flex: 1;
+                    background: #1e293b;
+                    border: 1px solid #334155;
+                    color: #fff;
+                    font-size: 0.75rem;
+                    padding: 6px;
+                    cursor: pointer;
+                    border-radius: 4px;
+                    font-weight: bold;
+                  "
+                >
+                  X2
+                </button>
+                <button
+                  type="button"
+                  onclick="
+                    let i = document.getElementById('ds-bet-amount');
+                    i.value = Math.max(200, Math.floor(i.value / 2));
+                  "
+                  style="
+                    flex: 1;
+                    background: #1e293b;
+                    border: 1px solid #334155;
+                    color: #fff;
+                    font-size: 0.75rem;
+                    padding: 6px;
+                    cursor: pointer;
+                    border-radius: 4px;
+                    font-weight: bold;
+                  "
+                >
+                  /2
+                </button>
+              </div>
+
+              <div class="ds-multiplier-box">
+                Last Payout : <span id="ds-last-multiplier">0.00x</span>
+              </div>
+
+              <button class="btn-crash-action" id="btn-ds-spin">
+                SCAN SHIELD (SPIN)
+              </button>
+            </div>
+
+            <div class="ds-wheel-area">
+              <div class="ds-wheel-wrapper">
+                <div class="ds-laser-pointer"></div>
+                <div class="ds-wheel" id="ds-main-wheel">
+                  <div class="ds-wheel-center">SCAN</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="game-container hidden" id="game-plinko">
+          <div class="ma-header-banner" style="margin-bottom: 20px">
+            <div>
+              <h2 class="game-title">
+                <i class="fa-solid fa-circle-nodes"></i> Cyber-Plinko PRO
+              </h2>
+              <p class="game-desc">
+                Lâchez la bille d'énergie. Méfiez-vous du centre et tentez le
+                jackpot sur les bords !
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="plinko-layout"
+            style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px"
+          >
+            <div
+              class="plinko-board-wrapper"
+              style="
+                background: #0d1627;
+                border: 2px solid #1e293b;
+                border-radius: 8px;
+                padding: 15px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+              "
+            >
+              <canvas
+                id="plinko-canvas"
+                width="500"
+                height="450"
+                style="
+                  background: #070b14;
+                  border-radius: 6px;
+                  border: 1px solid #141f36;
+                "
+              ></canvas>
+            </div>
+
+            <div
+              class="plinko-controls"
+              style="
+                background: #0d1627;
+                border: 2px solid #1e293b;
+                border-radius: 8px;
+                padding: 20px;
+              "
+            >
+              <h3
+                style="
+                  color: #fff;
+                  margin-top: 0;
+                  margin-bottom: 15px;
+                  font-size: 1.1rem;
+                "
+              >
+                Configuration
+              </h3>
+
+              <div class="input-group font-dash-input">
+                <label for="plinko-bet">Mise (FCFA) :</label>
+                <input type="number" id="plinko-bet" min="100" value="200" />
+              </div>
+
+              <div class="input-group font-dash-input" style="margin-top: 15px">
+                <label for="plinko-risk">Niveau de Risque :</label>
+                <select
+                  id="plinko-risk"
+                  style="
+                    width: 100%;
+                    background: #070b14;
+                    border: 1px solid #1e293b;
+                    color: #fff;
+                    padding: 10px;
+                    border-radius: 4px;
+                    font-weight: bold;
+                    cursor: pointer;
+                  "
+                >
+                  <option value="low">FAIBLE (Gains réguliers)</option>
+                  <option value="medium" selected>MODÉRÉ (Équilibré)</option>
+                  <option value="high">ÉLEVÉ (Jackpot Hardcore)</option>
+                </select>
+              </div>
+
+              <button
+                type="button"
+                class="btn-crash-action"
+                id="btn-plinko-drop"
+                style="
+                  width: 100%;
+                  margin-top: 25px;
+                  padding: 12px;
+                  font-size: 1rem;
+                "
+              >
+                LÂCHER LA BILLE
+              </button>
+
+              <div style="margin-top: 25px">
+                <span
+                  style="
+                    color: #64748b;
+                    font-size: 0.8rem;
+                    display: block;
+                    margin-bottom: 8px;
+                  "
+                  >Derniers Multiplicateurs :</span
+                >
+                <div
+                  id="plinko-recent-stats"
+                  style="
+                    display: flex;
+                    gap: 5px;
+                    flex-wrap: wrap;
+                    min-height: 30px;
+                  "
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--Cyber shel-->
+        <!--===============================================-->
+
+        <div class="game-container hidden" id="game-shell">
+          <div class="ma-header-banner" style="margin-bottom: 20px">
+            <div>
+              <h2 class="game-title">
+                <i class="fa-solid fa-cubes"></i> Cyber-Shell
+              </h2>
+              <p class="game-desc">
+                Suivez la clé d'accès. Les puces vont se mélanger à toute
+                vitesse. Trouvez la bonne pour décrocher le multiplicateur x2.90
+                !
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="shell-layout"
+            style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px"
+          >
+            <div
+              class="shell-board-wrapper"
+              style="
+                background: #0d1627;
+                border: 2px solid #1e293b;
+                border-radius: 8px;
+                padding: 25px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 380px;
+              "
+            >
+              <canvas
+                id="shell-canvas"
+                width="500"
+                height="320"
+                style="
+                  background: #070b14;
+                  border-radius: 6px;
+                  border: 1px solid #141f36;
+                  cursor: pointer;
+                "
+              ></canvas>
+            </div>
+
+            <div
+              class="shell-controls"
+              style="
+                background: #0d1627;
+                border: 2px solid #1e293b;
+                border-radius: 8px;
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+              "
+            >
+              <div>
+                <h3
+                  style="
+                    color: #fff;
+                    margin-top: 0;
+                    margin-bottom: 15px;
+                    font-size: 1.1rem;
+                  "
+                >
+                  Configuration
+                </h3>
+
+                <div class="input-group font-dash-input">
+                  <label for="shell-bet">Mise (FCFA) :</label>
+                  <input type="number" id="shell-bet" min="100" value="200" />
+                </div>
+
+                <div
+                  style="
+                    margin-top: 20px;
+                    background: #070b14;
+                    padding: 15px;
+                    border-radius: 6px;
+                    border: 1px solid #141f36;
+                    text-align: center;
+                  "
+                >
+                  <span
+                    style="
+                      color: #64748b;
+                      font-size: 0.85rem;
+                      display: block;
+                      margin-bottom: 5px;
+                    "
+                    >Multiplicateur fixe :</span
+                  >
+                  <strong
+                    style="
+                      color: #a855f7;
+                      font-size: 1.6rem;
+                      text-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+                    "
+                    >x2.90</strong
+                  >
+                </div>
+              </div>
+
+              <div style="margin-top: 25px">
+                <button
+                  type="button"
+                  class="btn-crash-action"
+                  id="btn-shell-start"
+                  style="
+                    width: 100%;
+                    padding: 12px;
+                    font-size: 1rem;
+                    background: #a855f7;
+                    box-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
+                  "
+                >
+                  LANCER LE MÉLANGE
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--Cyber-Heist-->
+        <!--=============================================== -->
+
+        <div class="game-container hidden" id="game-heist">
+          <div
+            class="ma-header-banner"
+            style="
+              margin-bottom: 20px;
+              background: linear-gradient(
+                90deg,
+                rgba(255, 0, 85, 0.1),
+                rgba(168, 85, 247, 0.1)
+              );
+              border-left: 4px solid #ff0055;
+            "
+          >
+            <div>
+              <h2 class="game-title">
+                <i class="fa-solid fa-vault"></i> Cyber-Heist : Laser Breach
+              </h2>
+              <p class="game-desc">
+                Infiltrez le coffre central. Alignez vos tirs avec les brèches
+                des anneaux laser en rotation. Un faux pas et l'alarme détruit
+                tout !
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="heist-layout"
+            style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px"
+          >
+            <div
+              class="heist-board-wrapper"
+              style="
+                background: #0d1627;
+                border: 2px solid #1e293b;
+                border-radius: 12px;
+                padding: 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 400px;
+                box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.6);
+                position: relative;
+              "
+            >
+              <div
+                id="heist-alarm-overlay"
+                style="
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  width: 100%;
+                  height: 100%;
+                  background: rgba(239, 68, 68, 0);
+                  pointer-events: none;
+                  transition: background 0.2s ease;
+                  border-radius: 12px;
+                  z-index: 5;
+                "
+              ></div>
+              <canvas
+                id="heist-canvas"
+                width="460"
+                height="380"
+                style="
+                  background: #050911;
+                  border-radius: 8px;
+                  border: 1px solid #141f36;
+                "
+              ></canvas>
+            </div>
+
+            <div
+              class="heist-controls"
+              style="
+                background: #0d1627;
+                border: 2px solid #1e293b;
+                border-radius: 12px;
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+              "
+            >
+              <div>
+                <h3
+                  style="
+                    color: #fff;
+                    margin-top: 0;
+                    margin-bottom: 15px;
+                    font-size: 1.1rem;
+                    letter-spacing: 1px;
+                  "
+                >
+                  CONSOLE DE PIRATAGE
+                </h3>
+
+                <div class="input-group font-dash-input">
+                  <label for="heist-bet">Mise de départ (FCFA) :</label>
+                  <input
+                    type="number"
+                    id="heist-bet"
+                    min="100"
+                    value="500"
+                    style="border-color: #ff0055"
+                  />
+                </div>
+
+                <div
+                  style="
+                    margin-top: 25px;
+                    background: #070b14;
+                    padding: 15px;
+                    border-radius: 8px;
+                    border: 1px solid #141f36;
+                    text-align: center;
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+                  "
+                >
+                  <span
+                    style="
+                      color: #64748b;
+                      font-size: 0.8rem;
+                      display: block;
+                      text-transform: uppercase;
+                      letter-spacing: 1px;
+                      margin-bottom: 5px;
+                    "
+                    >Niveau du Multiplicateur :</span
+                  >
+                  <strong
+                    id="heist-display-mult"
+                    style="
+                      color: #ff0055;
+                      font-size: 2rem;
+                      font-family: monospace;
+                      text-shadow: 0 0 15px rgba(255, 0, 85, 0.6);
+                    "
+                    >x0.00</strong
+                  >
+                  <span
+                    id="heist-next-info"
+                    style="
+                      color: #64748b;
+                      font-size: 0.75rem;
+                      display: block;
+                      margin-top: 5px;
+                    "
+                    >Sécurisez le premier anneau</span
+                  >
+                </div>
+              </div>
+
+              <div style="margin-top: 25px">
+                <button
+                  type="button"
+                  class="btn-crash-action"
+                  id="btn-heist-action"
+                  style="
+                    width: 100%;
+                    padding: 14px;
+                    font-size: 1.1rem;
+                    font-weight: bold;
+                    background: linear-gradient(135deg, #ff0055, #a855f7);
+                    border: none;
+                    box-shadow: 0 0 15px rgba(255, 0, 85, 0.4);
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                  "
+                >
+                  INITIALISER LE CASSE
+                </button>
+                <button
+                  type="button"
+                  class="btn-crash-action hidden"
+                  id="btn-heist-cashout"
+                  style="
+                    width: 100%;
+                    padding: 12px;
+                    font-size: 1rem;
+                    margin-top: 10px;
+                    background: #22c55e;
+                    box-shadow: 0 0 12px rgba(34, 197, 94, 0.3);
+                  "
+                >
+                  QUITTER LE COMPARTIMENT
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- game-vector-->
+        <!--================================================-->
+        <div class="game-container hidden" id="game-vector">
+          <div
+            class="ma-header-banner"
+            style="
+              margin-bottom: 20px;
+              background: linear-gradient(
+                90deg,
+                rgba(0, 229, 255, 0.05),
+                rgba(168, 85, 247, 0.05)
+              );
+              border-left: 4px solid #00e5ff;
+            "
+          >
+            <div>
+              <h2 class="game-title">
+                <i class="fa-solid fa-waveform-path"></i> Cyber-Vector : Le
+                Quadrant Électrique
+              </h2>
+              <p class="game-desc">
+                Sélectionnez vos zones de capture réseau. Fixez le faisceau sur
+                l'un de vos quadrants pour valider l'injection de crédits !
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="vector-layout"
+            style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px"
+          >
+            <div
+              class="vector-board-wrapper"
+              style="
+                background: #090f1d;
+                border: 2px solid #141f36;
+                border-radius: 12px;
+                padding: 20px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 400px;
+                position: relative;
+                box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.8);
+              "
+            >
+              <canvas
+                id="vector-canvas"
+                width="400"
+                height="400"
+                style="background: transparent"
+              ></canvas>
+            </div>
+
+            <div
+              class="vector-controls"
+              style="
+                background: #0d1627;
+                border: 2px solid #1e293b;
+                border-radius: 12px;
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+              "
+            >
+              <div>
+                <h3
+                  style="
+                    color: #fff;
+                    margin-top: 0;
+                    margin-bottom: 15px;
+                    font-size: 1rem;
+                    letter-spacing: 1px;
+                    text-transform: uppercase;
+                  "
+                >
+                  Allocation des Secteurs
+                </h3>
+
+                <div class="input-group font-dash-input">
+                  <label for="vector-bet">Mise (FCFA) :</label>
+                  <input
+                    type="number"
+                    id="vector-bet"
+                    min="100"
+                    value="500"
+                    style="border-color: #1e293b"
+                  />
+                </div>
+
+                <div style="margin-top: 20px">
+                  <label
+                    style="
+                      color: #64748b;
+                      font-size: 0.8rem;
+                      display: block;
+                      margin-bottom: 10px;
+                    "
+                    >Cibles actives :</label
+                  >
+                  <div
+                    style="
+                      display: grid;
+                      grid-template-columns: 1fr 1fr;
+                      gap: 10px;
+                    "
+                  >
+                    <button
+                      type="button"
+                      class="vector-sector-btn"
+                      data-sector="0"
+                      style="
+                        background: rgba(255, 255, 255, 0.02);
+                        border: 1px solid #141f36;
+                        color: #fff;
+                        padding: 12px;
+                        border-radius: 6px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                      "
+                    >
+                      Secteur A
+                    </button>
+                    <button
+                      type="button"
+                      class="vector-sector-btn"
+                      data-sector="1"
+                      style="
+                        background: rgba(255, 255, 255, 0.02);
+                        border: 1px solid #141f36;
+                        color: #fff;
+                        padding: 12px;
+                        border-radius: 6px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                      "
+                    >
+                      Secteur B
+                    </button>
+                    <button
+                      type="button"
+                      class="vector-sector-btn"
+                      data-sector="2"
+                      style="
+                        background: rgba(255, 255, 255, 0.02);
+                        border: 1px solid #141f36;
+                        color: #fff;
+                        padding: 12px;
+                        border-radius: 6px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                      "
+                    >
+                      Secteur C
+                    </button>
+                    <button
+                      type="button"
+                      class="vector-sector-btn"
+                      data-sector="3"
+                      style="
+                        background: rgba(255, 255, 255, 0.02);
+                        border: 1px solid #141f36;
+                        color: #fff;
+                        padding: 12px;
+                        border-radius: 6px;
+                        font-weight: bold;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                      "
+                    >
+                      Secteur D
+                    </button>
+                  </div>
+                </div>
+
+                <div
+                  style="
+                    margin-top: 20px;
+                    background: #050911;
+                    padding: 12px;
+                    border-radius: 6px;
+                    border: 1px solid #141f36;
+                    text-align: center;
+                  "
+                >
+                  <span
+                    style="
+                      color: #475569;
+                      font-size: 0.75rem;
+                      display: block;
+                      text-transform: uppercase;
+                    "
+                    >Rendement Estimé :</span
+                  >
+                  <strong
+                    id="vector-mult-display"
+                    style="color: #64748b; font-size: 1.4rem"
+                    >x0.00</strong
+                  >
+                </div>
+              </div>
+
+              <div style="margin-top: 25px">
+                <button
+                  type="button"
+                  class="btn-crash-action"
+                  id="btn-vector-pulse"
+                  style="
+                    width: 100%;
+                    padding: 14px;
+                    font-size: 1rem;
+                    font-weight: bold;
+                    background: #00e5ff;
+                    color: #000;
+                    border: none;
+                    box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+                    border-radius: 6px;
+                    letter-spacing: 1px;
+                  "
+                >
+                  AMORCER LE CYCLAGE
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div
+      id="modal-overlay"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+      "
+    >
+      <div
+        style="
+          background: #0d1627;
+          border: 1px solid #1e293b;
+          padding: 25px;
+          border-radius: 12px;
+          width: 100%;
+          max-width: 450px;
+          position: relative;
+        "
+      >
+        <button
+          id="close-modal-btn"
+          style="
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #64748b;
+            font-size: 1.2rem;
+            cursor: pointer;
+          "
+        >
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div id="modal-content-depot" style="display: none">
+          <h3
+            style="
+              color: #00e5ff;
+              margin-top: 0;
+              display: flex;
+              align-items: center;
+              gap: 10px;
+            "
+          >
+            <i class="fa-solid fa-wallet"></i> Dépôt de Compte Auto
+          </h3>
+          <p style="font-size: 0.85rem; color: #64748b">
+            Entrez le montant et le code de recharge secret fourni par le
+            service client.
+          </p>
+
+          <div style="margin-top: 15px">
+            <label
+              style="
+                color: #64748b;
+                font-size: 0.85rem;
+                display: block;
+                margin-bottom: 5px;
+              "
+              >Montant à créditer (XOF)</label
+            >
+            <input
+              type="number"
+              id="depot-montant"
+              placeholder="ex: 500"
+              style="
+                width: 100%;
+                background: #070b14;
+                border: 1px solid #1e293b;
+                padding: 10px;
+                color: #fff;
+                border-radius: 6px;
+                box-sizing: border-box;
+              "
+            />
+          </div>
+
+          <div style="margin-top: 15px">
+            <label
+              style="
+                color: #64748b;
+                font-size: 0.85rem;
+                display: block;
+                margin-bottom: 5px;
+              "
+              >Code Secret de Validation</label
+            >
+            <input
+              type="text"
+              id="depot-id-transaction"
+              placeholder="ex: YB-4892-XF"
+              style="
+                width: 100%;
+                background: #070b14;
+                border: 1px solid #1e293b;
+                padding: 10px;
+                color: #fff;
+                border-radius: 6px;
+                box-sizing: border-box;
+                font-family: monospace;
+                text-transform: uppercase;
+              "
+            />
+          </div>
+
+          <button
+            id="btn-depot"
+            style="
+              width: 100%;
+              background: #00e5ff;
+              color: #070b14;
+              border: none;
+              padding: 12px;
+              font-weight: bold;
+              border-radius: 6px;
+              margin-top: 20px;
+              cursor: pointer;
+            "
+          >
+            RECHARGER MON SOLDE
+          </button>
+        </div>
+
+        <div id="modal-content-withdraw" style="display: none">
+          <h3
+            style="
+              color: #ef4444;
+              margin-top: 0;
+              display: flex;
+              align-items: center;
+              gap: 10px;
+            "
+          >
+            <i class="fa-solid fa-money-bill-transfer"></i> Retrait Instantané
+            vers SIM
+          </h3>
+          <p style="font-size: 0.85rem; color: #64748b">
+            L'argent sera transféré automatiquement sur votre compte Mobile
+            Money.
+          </p>
+
+          <div style="margin-top: 15px">
+            <label
+              style="
+                color: #64748b;
+                font-size: 0.85rem;
+                display: block;
+                margin-bottom: 5px;
+              "
+              >Réseau Mobile Money</label
+            >
+            <select
+              id="retrait-reseau"
+              style="
+                width: 100%;
+                background: #070b14;
+                border: 1px solid #1e293b;
+                padding: 10px;
+                color: #fff;
+                border-radius: 6px;
+                box-sizing: border-box;
+              "
+            >
+              <option value="MTN">MTN Mobile Money (Bénin)</option>
+              <option value="MOOV">Moov Money (Bénin)</option>
+              <option value="CELTIIS">Celtiis Cash (Bénin)</option>
+            </select>
+          </div>
+
+          <div style="margin-top: 15px">
+            <label
+              style="
+                color: #64748b;
+                font-size: 0.85rem;
+                display: block;
+                margin-bottom: 5px;
+              "
+              >Numéro de Téléphone Récepteur</label
+            >
+            <input
+              type="tel"
+              id="retrait-phone"
+              placeholder="ex: 01xxxxxxxx"
+              style="
+                width: 100%;
+                background: #070b14;
+                border: 1px solid #1e293b;
+                padding: 10px;
+                color: #fff;
+                border-radius: 6px;
+                box-sizing: border-box;
+              "
+            />
+          </div>
+
+          <div style="margin-top: 15px">
+            <label
+              style="
+                color: #64748b;
+                font-size: 0.85rem;
+                display: block;
+                margin-bottom: 5px;
+              "
+              >Montant du Retrait (FCFA)</label
+            >
+            <input
+              type="number"
+              id="retrait-montant"
+              placeholder="ex: 1000"
+              style="
+                width: 100%;
+                background: #070b14;
+                border: 1px solid #1e293b;
+                padding: 10px;
+                color: #fff;
+                border-radius: 6px;
+                box-sizing: border-box;
+              "
+            />
+          </div>
+
+          <button
+            id="btn-retrait"
+            style="
+              width: 100%;
+              background: #ef4444;
+              color: #fff;
+              border: none;
+              padding: 12px;
+              font-weight: bold;
+              border-radius: 6px;
+              margin-top: 20px;
+              cursor: pointer;
+            "
+          >
+            LANCER LE RETRAIT DIRECT
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
+
+<footer
+  style="
+    background-color: #0f0f12;
+    color: #bbb;
+    padding: 40px 20px 20px 20px;
+    font-family: Arial, sans-serif;
+    margin-top: 50px;
+    border-top: 1px solid #1e1e24;
+  "
+>
+  <div
+    style="
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 30px;
+    "
+  >
+    <div style="flex: 1; min-width: 250px">
+      <h3
+        style="
+          color: #ffffff;
+          margin-top: 0;
+          font-size: 20px;
+          font-weight: bold;
+          letter-spacing: 1px;
+        "
+      >
+        <span style="color: #00ff88">YEAGER</span>BET
+      </h3>
+      <p style="font-size: 13px; line-height: 1.6; color: #8a8a93">
+        Anticipez, misez et gagnez sur la première plateforme de mini-jeux
+        cryptographiques et technologiques du Bénin. Rapide, sécurisé et
+        instantané.
+      </p>
+    </div>
+
+    <div style="flex: 1; min-width: 150px">
+      <h4
+        style="
+          color: #00ff88;
+          font-size: 14px;
+          text-transform: uppercase;
+          margin-top: 0;
+          margin-bottom: 15px;
+          letter-spacing: 0.5px;
+        "
+      >
+        Jeux
+      </h4>
+      <ul
+        style="
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          font-size: 13px;
+          line-height: 2;
+        "
+      >
+        <li>
+          <a
+            href="#"
+            style="
+              color: #8a8a93;
+              text-decoration: none;
+              transition: color 0.2s;
+            "
+            onmouseover="this.style.color = '#ffffff'"
+            onmouseout="this.style.color = '#8a8a93'"
+            >Quantum Pulse</a
+          >
+        </li>
+        <li>
+          <a
+            href="#"
+            style="
+              color: #8a8a93;
+              text-decoration: none;
+              transition: color 0.2s;
+            "
+            onmouseover="this.style.color = '#ffffff'"
+            onmouseout="this.style.color = '#8a8a93'"
+            >CyberCrash</a
+          >
+        </li>
+        <li>
+          <a
+            href="#"
+            style="
+              color: #8a8a93;
+              text-decoration: none;
+              transition: color 0.2s;
+            "
+            onmouseover="this.style.color = '#ffffff'"
+            onmouseout="this.style.color = '#8a8a93'"
+            >Binary Grid</a
+          >
+        </li>
+      </ul>
+    </div>
+
+    <div style="flex: 1; min-width: 200px">
+      <h4
+        style="
+          color: #6c5ce7;
+          font-size: 14px;
+          text-transform: uppercase;
+          margin-top: 0;
+          margin-bottom: 15px;
+          letter-spacing: 0.5px;
+        "
+      >
+        Paiements Sécurisés
+      </h4>
+      <p
+        style="font-size: 13px; line-height: 1.6; color: #8a8a93; margin-top: 0"
+      >
+        Dépôts et retraits ultra-rapides via les réseaux Mobile Money locaux.
+      </p>
+      <div
+        style="display: flex; gap: 10px; align-items: center; margin-top: 10px"
+      >
+        <span
+          style="
+            background: #1e1e24;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: #ff9f43;
+            font-weight: bold;
+            border: 1px solid #333;
+          "
+          >MTN MoMo</span
+        >
+        <span
+          style="
+            background: #1e1e24;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: #ee5253;
+            font-weight: bold;
+            border: 1px solid #333;
+          "
+          >MOOV MONEY</span
+        >
+      </div>
+    </div>
+  </div>
+
+  <div
+    style="
+      max-width: 1200px;
+      margin: 30px auto 0 auto;
+      padding-top: 20px;
+      border-top: 1px solid #1e1e24;
+      text-align: center;
+      font-size: 12px;
+      color: #565666;
+    "
+  >
+    <p style="margin: 0">
+      &copy; 2026 YeagerBet. Développé par Othniel Yeager. Tous droits réservés.
+    </p>
+    <p style="margin-top: 5px; color: #ff7675; font-size: 11px">
+      ⚠️ Jouer comporte des risques : endettement, dépendance. Soyez
+      responsable.
+    </p>
+  </div>
+</footer>

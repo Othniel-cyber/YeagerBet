@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YeagerBet - HQ Administration</title>
+    <link rel="icon" type="image/png" href="logo.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <style>
+      :root {
+        --bg-main: #070b14;
+        --bg-card: #0d1627;
+        --border-color: #1e293b;
+        --text-main: #f8fafc;
+        --text-muted: #64748b;
+        --accent-admin: #00ff88;
+        --success: #22c55e;
+        --danger: #ef4444;
+        --gold: #eab308;
+      }
+      body {
+        background-color: var(--bg-main);
+        color: var(--text-main);
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 20px;
+      }
+      .admin-header {
+        text-align: center;
+        margin-bottom: 30px;
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 20px;
+      }
+      .admin-header h1 {
+        color: var(--accent-admin);
+        margin: 0;
+        font-size: 2rem;
+      }
+      .grid-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 15px;
+        margin-bottom: 30px;
+      }
+      .stat-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+      }
+      .stat-card h3 {
+        margin: 0 0 10px 0;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+      }
+      .stat-card .value {
+        font-size: 1.6rem;
+        font-weight: bold;
+      }
+      .value.green {
+        color: var(--success);
+      }
+      .value.red {
+        color: var(--danger);
+      }
+      .value.gold {
+        color: var(--gold);
+      }
+
+      .panel-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+      @media (max-width: 768px) {
+        .panel-container {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .panel {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 20px;
+      }
+      .panel h2 {
+        font-size: 1.2rem;
+        margin-top: 0;
+        color: var(--accent-admin);
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 10px;
+      }
+      .log-box {
+        max-height: 300px;
+        overflow-y: auto;
+      }
+
+      /* STYLE CORRIGÉ POUR ACCUEILLIR LES BOUTONS DE BLOCAGE */
+      .log-item {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 12px !important;
+        border-bottom: 1px solid var(--border-color) !important;
+        font-size: 0.85rem;
+      }
+      .log-details {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .badge {
+        background: #1e293b;
+        padding: 5px 8px;
+        border-radius: 4px;
+        color: var(--accent-admin);
+      }
+
+      .notification-box {
+        grid-column: 1 / -1;
+        background: #0a101d;
+        border: 2px solid #10b981;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 20px;
+      }
+      .notification-box h2 {
+        color: #10b981;
+        margin-top: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .notif-item {
+        padding: 12px;
+        border-left: 4px solid var(--accent-admin);
+        background: #0f172a;
+        margin-bottom: 8px;
+        border-radius: 4px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.9rem;
+      }
+      .notif-item.notif-inscription {
+        border-left-color: #3b82f6;
+      }
+      .notif-item.notif-gain {
+        border-left-color: var(--success);
+      }
+      .notif-item.notif-perte {
+        border-left-color: var(--danger);
+      }
+
+      .lock-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--bg-main);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
+      .lock-screen input {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        color: #fff;
+        padding: 12px;
+        border-radius: 6px;
+        font-size: 1.1rem;
+        text-align: center;
+        outline: none;
+        margin-top: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="security-gate" class="lock-screen">
+      <h1 style="color: #00ff88">
+        <i class="fa-solid fa-lock"></i> YeagerBet HQ Admin
+      </h1>
+      <p style="color: #64748b">Entrez le code d'accès administrateur</p>
+      <input
+        type="password"
+        id="admin-pass-input"
+        placeholder="••••••••"
+        autocomplete="off"
+      />
+    </div>
+
+    <div id="admin-content" style="display: none">
+      <div class="admin-header">
+        <h1>
+          <i class="fa-solid fa-gears"></i> PANNEAU DE CONTRÔLE CONSOLE GENERALE
+        </h1>
+        <p style="color: var(--text-muted); margin: 5px 0 0 0">
+          Flux réels de production de la plateforme (Données virtuelles
+          nettoyées)
+        </p>
+      </div>
+
+      <div class="grid-stats">
+        <div class="stat-card">
+          <h3>Membres Inscrits</h3>
+          <div class="value gold" id="stat-count-users">0</div>
+        </div>
+        <div class="stat-card">
+          <h3>Total Dépôts</h3>
+          <div class="value green" id="stat-total-deposits">0 F</div>
+        </div>
+        <div class="stat-card">
+          <h3>Gains Joueurs</h3>
+          <div class="value red" id="stat-gains-joueurs">0 F</div>
+        </div>
+        <div class="stat-card">
+          <h3>Compte Principal (Profit Site)</h3>
+          <div class="value green" id="stat-main-account">0 F</div>
+        </div>
+      </div>
+
+      <div class="panel-container">
+        <div class="panel">
+          <h2><i class="fa-solid fa-users"></i> Journal des Inscriptions</h2>
+          <div class="log-box" id="admin-users-logs"></div>
+        </div>
+        <div class="panel">
+          <h2>
+            <i class="fa-solid fa-money-bill-transfer"></i> Flux Financier Des
+            Jeux
+          </h2>
+          <div class="log-box" id="admin-financial-logs"></div>
+        </div>
+
+        <div class="panel notification-box">
+          <h2>
+            <i class="fa-solid fa-bell"></i> NOTIFICATIONS GLOBAL EN TEMPS RÉEL
+          </h2>
+          <div class="log-box" id="admin-global-notifications">
+            <div style="color: #64748b; text-align: center; padding: 20px">
+              Aucune activité détectée. En attente des inscriptions des amis...
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="admin-card" style="margin-top: 20px; background: #0d1627; border: 1px solid #1e293b; padding: 20px; border-radius: 8px;">
+    <h3 style="color: #00e5ff; margin-top: 0;"><i class="fa-solid fa-ticket"></i> Générateur de Codes de Recharge Auto</h3>
+    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+        <input type="number" id="v-amount" placeholder="Montant (ex: 500)" style="background:#070b14; border:1px solid #1e293b; color:#fff; padding:8px; border-radius:4px; flex:1;">
+        <input type="text" id="v-code" placeholder="Code Secret (ou laisser vide pour auto)" style="background:#070b14; border:1px solid #1e293b; color:#fff; padding:8px; border-radius:4px; flex:1;">
+        <button id="btn-generate-voucher" style="background:#00e5ff; color:#070b14; border:none; padding:8px 15px; font-weight:bold; border-radius:4px; cursor:pointer;">Créer le code</button>
+    </div>
+    
+    <div style="max-height: 200px; overflow-y: auto; font-size: 0.9rem;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+                <tr style="color: #64748b; border-bottom: 1px solid #1e293b;">
+                    <th style="padding: 5px;">Code</th>
+                    <th>Montant</th>
+                    <th>Statut</th>
+                </tr>
+            </thead>
+            <tbody id="admin-vouchers-table-body" style="color: #fff;">
+                </tbody>
+        </table>
+    </div>
+</div>
+    </div>
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", () => {
+    const btnGen = document.getElementById("btn-generate-voucher");
+    if (btnGen) {
+        btnGen.addEventListener("click", () => {
+            const amount = parseInt(document.getElementById("v-amount").value);
+            let code = document.getElementById("v-code").value.trim().toUpperCase();
+
+            if (!amount || amount < 100) {
+                alert("Veuillez entrer un montant valide.");
+                return;
+            }
+
+            // Si aucun code n'est écrit, on en génère un au hasard (ex: YB-4892-XF)
+            if (!code) {
+                code = "YB-" + Math.floor(1000 + Math.random() * 9000) + "-" + Math.random().toString(36).substring(2, 4).toUpperCase();
+            }
+
+            let vouchers = JSON.parse(localStorage.getItem("yb_admin_vouchers")) || [];
+            
+            vouchers.unshift({
+                code: code,
+                amount: amount,
+                used: false,
+                usedBy: null,
+                dateUsed: null
+            });
+
+            localStorage.setItem("yb_admin_vouchers", JSON.stringify(vouchers));
+            document.getElementById("v-code").value = "";
+            renderAdminVouchers();
+        });
+    }
+    renderAdminVouchers();
+});
+
+function renderAdminVouchers() {
+    const tbody = document.getElementById("admin-vouchers-table-body");
+    if (!tbody) return;
+
+    let vouchers = JSON.parse(localStorage.getItem("yb_admin_vouchers")) || [];
+    tbody.innerHTML = "";
+
+    if (vouchers.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" style="color:#64748b; text-align:center; padding:10px;">Aucun code disponible.</td></tr>';
+        return;
+    }
+
+    vouchers.forEach(v => {
+        const tr = document.createElement("tr");
+        tr.style.borderBottom = "1px solid #0d1627";
+        tr.innerHTML = `
+            <td style="padding:6px; font-family:monospace; color:#00e5ff;">${v.code}</td>
+            <td style="color:#22c55e; font-weight:bold;">${v.amount} F</td>
+            <td>${v.used ? `<span style="color:#64748b;">Utilisé par ${v.usedBy}</span>` : '<span style="color:#eab308; font-weight:bold;">Disponible</span>'}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+// Écouter les changements pour mettre à jour la table
+window.addEventListener('storage', renderAdminVouchers);
+      const targetPass = "23/07/2010";
+      const gate = document.getElementById("security-gate");
+      const content = document.getElementById("admin-content");
+      const passInput = document.getElementById("admin-pass-input");
+
+      passInput.addEventListener("input", () => {
+        if (passInput.value === targetPass) {
+          gate.style.display = "none";
+          content.style.display = "block";
+          loadAdminData();
+        }
+      });
+
+      // ACTION DE BLOCAGE DE COMPTE JOUEUR
+      function toggleBlockUser(phone) {
+        let users =
+          JSON.parse(localStorage.getItem("yb_registered_accounts")) || [];
+        let userIndex = users.findIndex((u) => u.phone === phone);
+
+        if (userIndex !== -1) {
+          users[userIndex].isBlocked = !users[userIndex].isBlocked;
+          localStorage.setItem("yb_registered_accounts", JSON.stringify(users));
+
+          let activeUser = JSON.parse(localStorage.getItem("yb_active_user"));
+          if (activeUser && activeUser.phone === phone) {
+            activeUser.isBlocked = users[userIndex].isBlocked;
+            localStorage.setItem("yb_active_user", JSON.stringify(activeUser));
+          }
+          loadAdminData();
+        }
+      }
+
+      function loadAdminData() {
+        const users =
+          JSON.parse(localStorage.getItem("yb_registered_accounts")) || [];
+        const transactions =
+          JSON.parse(localStorage.getItem("yb_transactions")) || [];
+        const notifications =
+          JSON.parse(localStorage.getItem("yb_admin_notifications")) || [];
+
+        let totalDeposits = 0;
+        let totalGainsJoueurs = 0;
+        let totalPertesJoueurs = 0;
+
+        transactions.forEach((tx) => {
+          if (tx.type === "depot") totalDeposits += tx.amount;
+          if (tx.type === "gain") totalGainsJoueurs += tx.amount;
+          if (tx.type === "perte") totalPertesJoueurs += tx.amount;
+        });
+
+        let comptePrincipal = totalPertesJoueurs - totalGainsJoueurs;
+
+        if (document.getElementById("stat-count-users"))
+          document.getElementById("stat-count-users").innerText = users.length;
+        if (document.getElementById("stat-total-deposits"))
+          document.getElementById("stat-total-deposits").innerText =
+            totalDeposits.toLocaleString("fr-FR") + " F";
+        if (document.getElementById("stat-gains-joueurs"))
+          document.getElementById("stat-gains-joueurs").innerText =
+            totalGainsJoueurs.toLocaleString("fr-FR") + " F";
+
+        const mainAccEl = document.getElementById("stat-main-account");
+        if (mainAccEl) {
+          mainAccEl.innerText = comptePrincipal.toLocaleString("fr-FR") + " F";
+          mainAccEl.className =
+            comptePrincipal >= 0 ? "value green" : "value red";
+        }
+
+        // INJECTION DES COMPTES AVEC BOUTON DE BLOCAGE VISIBLE ET ALIGNÉ
+        const userContainer = document.getElementById("admin-users-logs");
+        if (userContainer) {
+          userContainer.innerHTML = "";
+          if (users.length === 0) {
+            userContainer.innerHTML =
+              '<div style="color: #64748b; text-align:center; padding-top:20px;">Aucun compte enregistré pour le moment.</div>';
+          } else {
+            users.forEach((u) => {
+              const item = document.createElement("div");
+              item.className = "log-item";
+
+              let isBlocked = u.isBlocked || false;
+              let btnText = isBlocked
+                ? '<i class="fa-solid fa-unlock"></i> Débloquer'
+                : '<i class="fa-solid fa-ban"></i> Bloquer';
+              let btnColor = isBlocked ? "#22c55e" : "#ef4444";
+              let statusBadge = isBlocked
+                ? ' <span style="color:#ef4444; font-size:0.75rem; font-weight:bold;">[BLOQUÉ]</span>'
+                : "";
+
+              item.innerHTML = `
+                            <div class="log-details">
+                                <span class="badge"><i class="fa-solid fa-user-check"></i></span> 
+                                <div>
+                                    Pseudo : <strong>${u.username}</strong> (${u.phone || "Pas de numéro"})${statusBadge}
+                                    <div style="color:#64748b; font-size:0.75rem; margin-top:2px;">Rejoint le : ${u.dateJoin || "En attente"}</div>
+                                </div>
+                            </div>
+                            <div>
+                                <button onclick="toggleBlockUser('${u.phone}')" style="background:${btnColor}; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold; display:flex; align-items:center; gap:5px;">
+                                    ${btnText}
+                                </button>
+                            </div>
+                        `;
+              userContainer.appendChild(item);
+            });
+          }
+        }
+
+        const financialContainer = document.getElementById(
+          "admin-financial-logs",
+        );
+        if (financialContainer) {
+          financialContainer.innerHTML = "";
+          if (transactions.length === 0) {
+            financialContainer.innerHTML =
+              '<div style="color: #64748b; text-align:center; padding-top:20px;">Aucun mouvement financier enregistré.</div>';
+          } else {
+            transactions.forEach((tx) => {
+              const item = document.createElement("div");
+              item.className = "log-item";
+              let sign = tx.type === "gain" || tx.type === "depot" ? "+" : "-";
+              let color =
+                tx.type === "gain" || tx.type === "depot"
+                  ? "#22c55e"
+                  : "#ef4444";
+              item.innerHTML = `<div>${tx.username} (${tx.type.toUpperCase()})</div><div style="color:${color}; font-weight:bold;">${sign} ${tx.amount} F</div>`;
+              financialContainer.appendChild(item);
+            });
+          }
+        }
+
+        const notifContainer = document.getElementById(
+          "admin-global-notifications",
+        );
+        if (notifContainer) {
+          if (notifications.length > 0) {
+            notifContainer.innerHTML = "";
+            notifications.forEach((n) => {
+              const boxNotif = document.createElement("div");
+              boxNotif.className = `notif-item notif-${n.type}`;
+              boxNotif.innerHTML = `<div><i class="fa-solid fa-circle-info"></i> ${n.text}</div><div style="color:#64748b; font-size:0.8rem; margin-left:15px;">${n.time}</div>`;
+              notifContainer.appendChild(boxNotif);
+            });
+          }
+        }
+      }
+      window.addEventListener("storage", loadAdminData);
+    </script>
+  </body>
+</html>
