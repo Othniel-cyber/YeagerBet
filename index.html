@@ -361,5 +361,48 @@
         }
       });
     </script>
+    <script>
+      // 1. Bloquer le clic droit sur tout le site
+      document.addEventListener("contextmenu", (event) =>
+        event.preventDefault(),
+      );
+
+      // 2. Bloquer les touches d'inspection (F12, Ctrl+Maj+I, Ctrl+Maj+J, Ctrl+U)
+      document.onkeydown = function (e) {
+        if (e.keyCode == 123) {
+          return false;
+        } // F12
+        if (e.ctrlKey && e.shiftKey && e.keyCode == "I".charCodeAt(0)) {
+          return false;
+        } // Ctrl+Maj+I
+        if (e.ctrlKey && e.shiftKey && e.keyCode == "J".charCodeAt(0)) {
+          return false;
+        } // Ctrl+Maj+J
+        if (e.ctrlKey && e.keyCode == "U".charCodeAt(0)) {
+          return false;
+        } // Ctrl+U (Code source)
+      };
+
+      // 1. Bloquer le clic droit sur tout le site
+      document.addEventListener("contextmenu", (event) =>
+        event.preventDefault(),
+      );
+
+      // 2. Bloquer les touches d'inspection (F12, Ctrl+Maj+I, Ctrl+Maj+J, Ctrl+U)
+      document.onkeydown = function (e) {
+        if (e.keyCode == 123) {
+          return false;
+        } // F12
+        if (e.ctrlKey && e.shiftKey && e.keyCode == "I".charCodeAt(0)) {
+          return false;
+        } // Ctrl+Maj+I
+        if (e.ctrlKey && e.shiftKey && e.keyCode == "J".charCodeAt(0)) {
+          return false;
+        } // Ctrl+Maj+J
+        if (e.ctrlKey && e.keyCode == "U".charCodeAt(0)) {
+          return false;
+        } // Ctrl+U (Code source)
+      };
+    </script>
   </body>
 </html>

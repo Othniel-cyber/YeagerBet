@@ -1,6 +1,22 @@
 <!doctype html>
 <html lang="fr">
   <head>
+    <script>
+      // VERROUILLAGE SÉCURITÉ ADMIN
+      (function () {
+        const motDePasseCorrect = "23/07/2010"; // Change ça par ton vrai mot de passe secret
+
+        // Demande le code secret dès l'accès à la page
+        const tentative = prompt(
+          "Accès restreint. Veuillez entrer le code administrateur YeagerBet :",
+        );
+
+        if (tentative !== motDePasseCorrect) {
+          alert("Accès refusé ! Redirection vers l'accueil...");
+          window.location.href = "index.html"; // Chasse le voleur vers l'accueil
+        }
+      })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>YeagerBet - HQ Administration</title>
@@ -9,6 +25,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
+
     <style>
       :root {
         --bg-main: #070b14;
@@ -252,92 +269,151 @@
           </div>
         </div>
       </div>
-      <div class="admin-card" style="margin-top: 20px; background: #0d1627; border: 1px solid #1e293b; padding: 20px; border-radius: 8px;">
-    <h3 style="color: #00e5ff; margin-top: 0;"><i class="fa-solid fa-ticket"></i> Générateur de Codes de Recharge Auto</h3>
-    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-        <input type="number" id="v-amount" placeholder="Montant (ex: 500)" style="background:#070b14; border:1px solid #1e293b; color:#fff; padding:8px; border-radius:4px; flex:1;">
-        <input type="text" id="v-code" placeholder="Code Secret (ou laisser vide pour auto)" style="background:#070b14; border:1px solid #1e293b; color:#fff; padding:8px; border-radius:4px; flex:1;">
-        <button id="btn-generate-voucher" style="background:#00e5ff; color:#070b14; border:none; padding:8px 15px; font-weight:bold; border-radius:4px; cursor:pointer;">Créer le code</button>
-    </div>
-    
-    <div style="max-height: 200px; overflow-y: auto; font-size: 0.9rem;">
-        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+      <div
+        class="admin-card"
+        style="
+          margin-top: 20px;
+          background: #0d1627;
+          border: 1px solid #1e293b;
+          padding: 20px;
+          border-radius: 8px;
+        "
+      >
+        <h3 style="color: #00e5ff; margin-top: 0">
+          <i class="fa-solid fa-ticket"></i> Générateur de Codes de Recharge
+          Auto
+        </h3>
+        <div style="display: flex; gap: 10px; margin-bottom: 15px">
+          <input
+            type="number"
+            id="v-amount"
+            placeholder="Montant (ex: 500)"
+            style="
+              background: #070b14;
+              border: 1px solid #1e293b;
+              color: #fff;
+              padding: 8px;
+              border-radius: 4px;
+              flex: 1;
+            "
+          />
+          <input
+            type="text"
+            id="v-code"
+            placeholder="Code Secret (ou laisser vide pour auto)"
+            style="
+              background: #070b14;
+              border: 1px solid #1e293b;
+              color: #fff;
+              padding: 8px;
+              border-radius: 4px;
+              flex: 1;
+            "
+          />
+          <button
+            id="btn-generate-voucher"
+            style="
+              background: #00e5ff;
+              color: #070b14;
+              border: none;
+              padding: 8px 15px;
+              font-weight: bold;
+              border-radius: 4px;
+              cursor: pointer;
+            "
+          >
+            Créer le code
+          </button>
+        </div>
+
+        <div style="max-height: 200px; overflow-y: auto; font-size: 0.9rem">
+          <table
+            style="width: 100%; border-collapse: collapse; text-align: left"
+          >
             <thead>
-                <tr style="color: #64748b; border-bottom: 1px solid #1e293b;">
-                    <th style="padding: 5px;">Code</th>
-                    <th>Montant</th>
-                    <th>Statut</th>
-                </tr>
+              <tr style="color: #64748b; border-bottom: 1px solid #1e293b">
+                <th style="padding: 5px">Code</th>
+                <th>Montant</th>
+                <th>Statut</th>
+              </tr>
             </thead>
-            <tbody id="admin-vouchers-table-body" style="color: #fff;">
-                </tbody>
-        </table>
-    </div>
-</div>
+            <tbody id="admin-vouchers-table-body" style="color: #fff"></tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
     <script>
-
-        document.addEventListener("DOMContentLoaded", () => {
-    const btnGen = document.getElementById("btn-generate-voucher");
-    if (btnGen) {
-        btnGen.addEventListener("click", () => {
+      document.addEventListener("DOMContentLoaded", () => {
+        const btnGen = document.getElementById("btn-generate-voucher");
+        if (btnGen) {
+          btnGen.addEventListener("click", () => {
             const amount = parseInt(document.getElementById("v-amount").value);
-            let code = document.getElementById("v-code").value.trim().toUpperCase();
+            let code = document
+              .getElementById("v-code")
+              .value.trim()
+              .toUpperCase();
 
             if (!amount || amount < 100) {
-                alert("Veuillez entrer un montant valide.");
-                return;
+              alert("Veuillez entrer un montant valide.");
+              return;
             }
 
             // Si aucun code n'est écrit, on en génère un au hasard (ex: YB-4892-XF)
             if (!code) {
-                code = "YB-" + Math.floor(1000 + Math.random() * 9000) + "-" + Math.random().toString(36).substring(2, 4).toUpperCase();
+              code =
+                "YB-" +
+                Math.floor(1000 + Math.random() * 9000) +
+                "-" +
+                Math.random().toString(36).substring(2, 4).toUpperCase();
             }
 
-            let vouchers = JSON.parse(localStorage.getItem("yb_admin_vouchers")) || [];
-            
+            let vouchers =
+              JSON.parse(localStorage.getItem("yb_admin_vouchers")) || [];
+
             vouchers.unshift({
-                code: code,
-                amount: amount,
-                used: false,
-                usedBy: null,
-                dateUsed: null
+              code: code,
+              amount: amount,
+              used: false,
+              usedBy: null,
+              dateUsed: null,
             });
 
             localStorage.setItem("yb_admin_vouchers", JSON.stringify(vouchers));
             document.getElementById("v-code").value = "";
             renderAdminVouchers();
-        });
-    }
-    renderAdminVouchers();
-});
+          });
+        }
+        renderAdminVouchers();
+      });
 
-function renderAdminVouchers() {
-    const tbody = document.getElementById("admin-vouchers-table-body");
-    if (!tbody) return;
+      function renderAdminVouchers() {
+        const tbody = document.getElementById("admin-vouchers-table-body");
+        if (!tbody) return;
 
-    let vouchers = JSON.parse(localStorage.getItem("yb_admin_vouchers")) || [];
-    tbody.innerHTML = "";
+        let vouchers =
+          JSON.parse(localStorage.getItem("yb_admin_vouchers")) || [];
+        tbody.innerHTML = "";
 
-    if (vouchers.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="3" style="color:#64748b; text-align:center; padding:10px;">Aucun code disponible.</td></tr>';
-        return;
-    }
+        if (vouchers.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="3" style="color:#64748b; text-align:center; padding:10px;">Aucun code disponible.</td></tr>';
+          return;
+        }
 
-    vouchers.forEach(v => {
-        const tr = document.createElement("tr");
-        tr.style.borderBottom = "1px solid #0d1627";
-        tr.innerHTML = `
+        vouchers.forEach((v) => {
+          const tr = document.createElement("tr");
+          tr.style.borderBottom = "1px solid #0d1627";
+          tr.innerHTML = `
             <td style="padding:6px; font-family:monospace; color:#00e5ff;">${v.code}</td>
             <td style="color:#22c55e; font-weight:bold;">${v.amount} F</td>
             <td>${v.used ? `<span style="color:#64748b;">Utilisé par ${v.usedBy}</span>` : '<span style="color:#eab308; font-weight:bold;">Disponible</span>'}</td>
         `;
-        tbody.appendChild(tr);
-    });
-}
-// Écouter les changements pour mettre à jour la table
-window.addEventListener('storage', renderAdminVouchers);
+          tbody.appendChild(tr);
+        });
+      }
+      // Écouter les changements pour mettre à jour la table
+      window.addEventListener("storage", renderAdminVouchers);
       const targetPass = "23/07/2010";
       const gate = document.getElementById("security-gate");
       const content = document.getElementById("admin-content");

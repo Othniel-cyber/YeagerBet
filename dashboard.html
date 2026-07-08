@@ -1503,178 +1503,202 @@
     </div>
 
     <script src="app.js"></script>
+
+    <footer
+      style="
+        background-color: #0f0f12;
+        color: #bbb;
+        padding: 40px 20px 20px 20px;
+        font-family: Arial, sans-serif;
+        margin-top: 50px;
+        border-top: 1px solid #1e1e24;
+      "
+    >
+      <div
+        style="
+          max-width: 1200px;
+          margin: 0 auto;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          gap: 30px;
+        "
+      >
+        <div style="flex: 1; min-width: 250px">
+          <h3
+            style="
+              color: #ffffff;
+              margin-top: 0;
+              font-size: 20px;
+              font-weight: bold;
+              letter-spacing: 1px;
+            "
+          >
+            <span style="color: #00ff88">YEAGER</span>BET
+          </h3>
+          <p style="font-size: 13px; line-height: 1.6; color: #8a8a93">
+            Anticipez, misez et gagnez sur la première plateforme de mini-jeux
+            cryptographiques et technologiques du Bénin. Rapide, sécurisé et
+            instantané.
+          </p>
+        </div>
+
+        <div style="flex: 1; min-width: 150px">
+          <h4
+            style="
+              color: #00ff88;
+              font-size: 14px;
+              text-transform: uppercase;
+              margin-top: 0;
+              margin-bottom: 15px;
+              letter-spacing: 0.5px;
+            "
+          >
+            Jeux
+          </h4>
+          <ul
+            style="
+              list-style: none;
+              padding: 0;
+              margin: 0;
+              font-size: 13px;
+              line-height: 2;
+            "
+          >
+            <li>
+              <a
+                href="#"
+                style="
+                  color: #8a8a93;
+                  text-decoration: none;
+                  transition: color 0.2s;
+                "
+                onmouseover="this.style.color = '#ffffff'"
+                onmouseout="this.style.color = '#8a8a93'"
+                >Quantum Pulse</a
+              >
+            </li>
+            <li>
+              <a
+                href="#"
+                style="
+                  color: #8a8a93;
+                  text-decoration: none;
+                  transition: color 0.2s;
+                "
+                onmouseover="this.style.color = '#ffffff'"
+                onmouseout="this.style.color = '#8a8a93'"
+                >CyberCrash</a
+              >
+            </li>
+            <li>
+              <a
+                href="#"
+                style="
+                  color: #8a8a93;
+                  text-decoration: none;
+                  transition: color 0.2s;
+                "
+                onmouseover="this.style.color = '#ffffff'"
+                onmouseout="this.style.color = '#8a8a93'"
+                >Binary Grid</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div style="flex: 1; min-width: 200px">
+          <h4
+            style="
+              color: #6c5ce7;
+              font-size: 14px;
+              text-transform: uppercase;
+              margin-top: 0;
+              margin-bottom: 15px;
+              letter-spacing: 0.5px;
+            "
+          >
+            Paiements Sécurisés
+          </h4>
+          <p
+            style="
+              font-size: 13px;
+              line-height: 1.6;
+              color: #8a8a93;
+              margin-top: 0;
+            "
+          >
+            Dépôts et retraits ultra-rapides via les réseaux Mobile Money
+            locaux.
+          </p>
+          <div
+            style="
+              display: flex;
+              gap: 10px;
+              align-items: center;
+              margin-top: 10px;
+            "
+          >
+            <span
+              style="
+                background: #1e1e24;
+                padding: 5px 10px;
+                border-radius: 4px;
+                font-size: 11px;
+                color: #ff9f43;
+                font-weight: bold;
+                border: 1px solid #333;
+              "
+              >MTN MoMo</span
+            >
+            <span
+              style="
+                background: #1e1e24;
+                padding: 5px 10px;
+                border-radius: 4px;
+                font-size: 11px;
+                color: #ee5253;
+                font-weight: bold;
+                border: 1px solid #333;
+              "
+              >MOOV MONEY</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div
+        style="
+          max-width: 1200px;
+          margin: 30px auto 0 auto;
+          padding-top: 20px;
+          border-top: 1px solid #1e1e24;
+          text-align: center;
+          font-size: 12px;
+          color: #565666;
+        "
+      >
+        <p style="margin: 0">
+          &copy; 2026 YeagerBet. Développé par Othniel Yeager. Tous droits
+          réservés.
+        </p>
+        <p style="margin-top: 5px; color: #ff7675; font-size: 11px">
+          ⚠️ Jouer comporte des risques : endettement, dépendance. Soyez
+          responsable.
+        </p>
+      </div>
+    </footer>
+    <script>
+    // 1. Bloquer le clic droit sur tout le site
+    document.addEventListener('contextmenu', event => event.preventDefault());
+
+    // 2. Bloquer les touches d'inspection (F12, Ctrl+Maj+I, Ctrl+Maj+J, Ctrl+U)
+    document.onkeydown = function(e) {
+        if (e.keyCode == 123) { return false; } // F12
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; } // Ctrl+Maj+I
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) { return false; } // Ctrl+Maj+J
+        if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; } // Ctrl+U (Code source)
+    };
+</script>
   </body>
 </html>
-
-<footer
-  style="
-    background-color: #0f0f12;
-    color: #bbb;
-    padding: 40px 20px 20px 20px;
-    font-family: Arial, sans-serif;
-    margin-top: 50px;
-    border-top: 1px solid #1e1e24;
-  "
->
-  <div
-    style="
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 30px;
-    "
-  >
-    <div style="flex: 1; min-width: 250px">
-      <h3
-        style="
-          color: #ffffff;
-          margin-top: 0;
-          font-size: 20px;
-          font-weight: bold;
-          letter-spacing: 1px;
-        "
-      >
-        <span style="color: #00ff88">YEAGER</span>BET
-      </h3>
-      <p style="font-size: 13px; line-height: 1.6; color: #8a8a93">
-        Anticipez, misez et gagnez sur la première plateforme de mini-jeux
-        cryptographiques et technologiques du Bénin. Rapide, sécurisé et
-        instantané.
-      </p>
-    </div>
-
-    <div style="flex: 1; min-width: 150px">
-      <h4
-        style="
-          color: #00ff88;
-          font-size: 14px;
-          text-transform: uppercase;
-          margin-top: 0;
-          margin-bottom: 15px;
-          letter-spacing: 0.5px;
-        "
-      >
-        Jeux
-      </h4>
-      <ul
-        style="
-          list-style: none;
-          padding: 0;
-          margin: 0;
-          font-size: 13px;
-          line-height: 2;
-        "
-      >
-        <li>
-          <a
-            href="#"
-            style="
-              color: #8a8a93;
-              text-decoration: none;
-              transition: color 0.2s;
-            "
-            onmouseover="this.style.color = '#ffffff'"
-            onmouseout="this.style.color = '#8a8a93'"
-            >Quantum Pulse</a
-          >
-        </li>
-        <li>
-          <a
-            href="#"
-            style="
-              color: #8a8a93;
-              text-decoration: none;
-              transition: color 0.2s;
-            "
-            onmouseover="this.style.color = '#ffffff'"
-            onmouseout="this.style.color = '#8a8a93'"
-            >CyberCrash</a
-          >
-        </li>
-        <li>
-          <a
-            href="#"
-            style="
-              color: #8a8a93;
-              text-decoration: none;
-              transition: color 0.2s;
-            "
-            onmouseover="this.style.color = '#ffffff'"
-            onmouseout="this.style.color = '#8a8a93'"
-            >Binary Grid</a
-          >
-        </li>
-      </ul>
-    </div>
-
-    <div style="flex: 1; min-width: 200px">
-      <h4
-        style="
-          color: #6c5ce7;
-          font-size: 14px;
-          text-transform: uppercase;
-          margin-top: 0;
-          margin-bottom: 15px;
-          letter-spacing: 0.5px;
-        "
-      >
-        Paiements Sécurisés
-      </h4>
-      <p
-        style="font-size: 13px; line-height: 1.6; color: #8a8a93; margin-top: 0"
-      >
-        Dépôts et retraits ultra-rapides via les réseaux Mobile Money locaux.
-      </p>
-      <div
-        style="display: flex; gap: 10px; align-items: center; margin-top: 10px"
-      >
-        <span
-          style="
-            background: #1e1e24;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 11px;
-            color: #ff9f43;
-            font-weight: bold;
-            border: 1px solid #333;
-          "
-          >MTN MoMo</span
-        >
-        <span
-          style="
-            background: #1e1e24;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 11px;
-            color: #ee5253;
-            font-weight: bold;
-            border: 1px solid #333;
-          "
-          >MOOV MONEY</span
-        >
-      </div>
-    </div>
-  </div>
-
-  <div
-    style="
-      max-width: 1200px;
-      margin: 30px auto 0 auto;
-      padding-top: 20px;
-      border-top: 1px solid #1e1e24;
-      text-align: center;
-      font-size: 12px;
-      color: #565666;
-    "
-  >
-    <p style="margin: 0">
-      &copy; 2026 YeagerBet. Développé par Othniel Yeager. Tous droits réservés.
-    </p>
-    <p style="margin-top: 5px; color: #ff7675; font-size: 11px">
-      ⚠️ Jouer comporte des risques : endettement, dépendance. Soyez
-      responsable.
-    </p>
-  </div>
-</footer>
