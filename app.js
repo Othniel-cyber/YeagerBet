@@ -3068,3 +3068,156 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+// ==========================================
+// CONFIGURATION DE L'API KKIAPAY
+// ==========================================
+const KKIAPAY_PUBLIC_KEY = "bd9260407a3811f19ef14b7a645214c1"; // Ta clé Sandbox officielle
+
+// ==========================================
+// GESTION DES DÉPÔTS AUTOMATIQUES
+// ==========================================
+const btnDepot = document.getElementById("btn-depot");
+
+if (btnDepot) {
+  btnDepot.addEventListener("click", function (e) {
+    e.preventDefault();
+    console.log("Clic détecté sur le bouton Lancer le dépôt");
+
+    const inputMontant = document.getElementById("depot-montant");
+    const inputPhone = document.getElementById("depot-phone");
+
+    if (!inputMontant || !inputPhone) {
+      console.error(
+        "Erreur : Les champs 'depot-montant' ou 'depot-phone' sont introuvables dans le HTML.",
+      );
+      alert("⚠️ Erreur technique : Champs du formulaire introuvables.");
+      return;
+    }
+
+    const montant = parseInt(inputMontant.value);
+    const telephone = inputPhone.value.trim();
+
+    console.log(`Montant saisi : ${montant}, Téléphone : ${telephone}`);
+
+    if (isNaN(montant) || montant < 100) {
+      alert("⚠️ Le montant minimum de dépôt est de 100 FCFA.");
+      return;
+    }
+
+    if (!telephone) {
+      alert("⚠️ Veuillez renseigner votre numéro de téléphone.");
+      return;
+    }
+
+    // Vérification de la présence du script Kkiapay
+    if (typeof openKkiapayWidget !== "undefined") {
+      console.log("Ouverture du widget via openKkiapayWidget...");
+      openKkiapayWidget({
+        amount: montant,
+        position: "center",
+        sandbox: true, //
+        key: KKIAPAY_PUBLIC_KEY,
+        phone: telephone,
+      });
+    }
+    // Alternative si l'instance globale s'appelle différemment selon la version du SDK
+    else if (typeof Kkiapay !== "undefined") {
+      console.log("Ouverture du widget via l'instance Kkiapay...");
+      Kkiapay({
+        amount: montant,
+        position: "center",
+        sandbox: true, //
+        key: KKIAPAY_PUBLIC_KEY,
+        phone: telephone,
+      });
+    } else {
+      console.error("Le script Kkiapay (k.js) n'est pas chargé sur la page.");
+      alert(
+        "⚠️ Le service de paiement n'est pas disponible pour le moment. Vérifiez votre connexion ou l'inclusion du script k.js.",
+      );
+    }
+  });
+} else {
+  console.error(
+    "Erreur : Le bouton avec l'ID 'btn-depot' est introuvables sur cette page.",
+  );
+}
+
+// ==========================================
+// INTERCEPTION DU SUCCÈS
+// ==========================================
+if (typeof addKkiapayListener === "function") {
+  addKkiapayListener("success", function (response) {
+    console.log("Paiement réussi, réponse de Kkiapay :", response);
+    const montantPaye = parseInt(response.amount);
+
+    let soldeActuel = parseFloat(localStorage.getItem("solde")) || 0;
+    soldeActuel += montantPaye;
+    localStorage.setItem("solde", soldeActuel);
+
+    alert(
+      `🎉 Paiement validé ! Votre compte YeagerBet a été crédité de ${montantPaye} FCFA.`,
+    );
+    window.location.reload();
+  });
+}
+
+// retrait
+
+const btnRetrait = document.getElementById("btn-retrait");
+
+if (btnRetrait) {
+  btnRetrait.addEventListener("click", async function () {
+    const network = document.getElementById("retrait-reseau").value;
+    const phone = document.getElementById("retrait-phone").value.trim();
+    const amount = parseFloat(document.getElementById("retrait-montant").value);
+    let soldeActuel = parseFloat(localStorage.getItem("solde")) || 0;
+
+    if (!phone || isNaN(amount) || amount <= 0) {
+      alert("⚠️ Veuillez entrer un numéro valide et un montant supérieur à 0.");
+      return;
+    }
+
+    if (amount > soldeActuel) {
+      alert(
+        `❌ Solde insuffisant ! Votre solde actuel est de ${soldeActuel} FCFA.`,
+      );
+      return;
+    }
+
+    btnRetrait.disabled = true;
+    btnRetrait.innerText = "TRAITEMENT EN COURS...";
+
+    try {
+      // Requête vers ton dossier api/ qu'on va lier à Vercel
+      const response = await fetch("/api/withdraw", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone, amount, network }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        soldeActuel -= amount;
+        localStorage.setItem("solde", soldeActuel);
+
+        alert(
+          `🎉 Retrait automatique réussi !\n${amount} FCFA ont été transférés sur le numéro ${phone}.`,
+        );
+        window.location.reload();
+      } else {
+        alert(`❌ Échec du retrait automatique : ${result.error}`);
+        btnRetrait.disabled = false;
+        btnRetrait.innerText = "DEMANDER LE RETRAIT INSTANTANÉ";
+      }
+    } catch (error) {
+      console.error(error);
+      alert(
+        "⚠️ Impossible de joindre le serveur de retrait. Ce bouton fonctionnera à 100% dès qu'on aura déployé sur Vercel !",
+      );
+      btnRetrait.disabled = false;
+      btnRetrait.innerText = "DEMANDER LE RETRAIT INSTANTANÉ";
+    }
+  });
+}

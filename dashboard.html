@@ -13,7 +13,6 @@
       referrerpolicy="no-referrer"
     />
     <link rel="stylesheet" href="style.css" />
-    <script src="https://cdn.fedapay.com/checkout.js?v=1.1.7"></script>
   </head>
   <body class="dashboard-body">
     <header class="navbar">
@@ -1252,6 +1251,7 @@
         </div>
       </main>
     </div>
+    <!-- DEPOT ET RETRAIT-->
 
     <div
       id="modal-overlay"
@@ -1305,11 +1305,11 @@
               gap: 10px;
             "
           >
-            <i class="fa-solid fa-wallet"></i> Dépôt de Compte Auto
+            <i class="fa-solid fa-wallet"></i> Dépôt Mobile Money
           </h3>
           <p style="font-size: 0.85rem; color: #64748b">
-            Entrez le montant et le code de recharge secret fourni par le
-            service client.
+            Entrez le montant et votre numéro. Une demande d'approbation (Push
+            USSD) sera envoyée sur votre téléphone.
           </p>
 
           <div style="margin-top: 15px">
@@ -1320,12 +1320,13 @@
                 display: block;
                 margin-bottom: 5px;
               "
-              >Montant à créditer (XOF)</label
+              >Montant du dépôt (XOF)</label
             >
             <input
               type="number"
               id="depot-montant"
-              placeholder="ex: 500"
+              value="500"
+              min="100"
               style="
                 width: 100%;
                 background: #070b14;
@@ -1346,12 +1347,12 @@
                 display: block;
                 margin-bottom: 5px;
               "
-              >Code Secret de Validation</label
+              >Numéro de téléphone</label
             >
             <input
-              type="text"
-              id="depot-id-transaction"
-              placeholder="ex: YB-4892-XF"
+              type="tel"
+              id="depot-phone"
+              placeholder="ex: 01xxxxxxxx"
               style="
                 width: 100%;
                 background: #070b14;
@@ -1360,8 +1361,6 @@
                 color: #fff;
                 border-radius: 6px;
                 box-sizing: border-box;
-                font-family: monospace;
-                text-transform: uppercase;
               "
             />
           </div>
@@ -1378,9 +1377,10 @@
               border-radius: 6px;
               margin-top: 20px;
               cursor: pointer;
+              text-align: center;
             "
           >
-            RECHARGER MON SOLDE
+            LANCER LE DÉPÔT DIRECT
           </button>
         </div>
 
@@ -1394,12 +1394,10 @@
               gap: 10px;
             "
           >
-            <i class="fa-solid fa-money-bill-transfer"></i> Retrait Instantané
-            vers SIM
+            <i class="fa-solid fa-money-bill-transfer"></i> Retrait Mobile Money
           </h3>
           <p style="font-size: 0.85rem; color: #64748b">
-            L'argent sera transféré automatiquement sur votre compte Mobile
-            Money.
+            Vos gains seront transférés directement sur votre compte SIM.
           </p>
 
           <div style="margin-top: 15px">
@@ -1496,13 +1494,11 @@
               cursor: pointer;
             "
           >
-            LANCER LE RETRAIT DIRECT
+            DEMANDER LE RETRAIT INSTANTANÉ
           </button>
         </div>
       </div>
     </div>
-
-    <script src="app.js"></script>
 
     <footer
       style="
@@ -1689,16 +1685,28 @@
       </div>
     </footer>
     <script>
-    // 1. Bloquer le clic droit sur tout le site
-    document.addEventListener('contextmenu', event => event.preventDefault());
+      // 1. Bloquer le clic droit sur tout le site
+      document.addEventListener("contextmenu", (event) =>
+        event.preventDefault(),
+      );
 
-    // 2. Bloquer les touches d'inspection (F12, Ctrl+Maj+I, Ctrl+Maj+J, Ctrl+U)
-    document.onkeydown = function(e) {
-        if (e.keyCode == 123) { return false; } // F12
-        if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; } // Ctrl+Maj+I
-        if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) { return false; } // Ctrl+Maj+J
-        if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; } // Ctrl+U (Code source)
-    };
-</script>
+      // 2. Bloquer les touches d'inspection (F12, Ctrl+Maj+I, Ctrl+Maj+J, Ctrl+U)
+      document.onkeydown = function (e) {
+        if (e.keyCode == 123) {
+          return false;
+        } // F12
+        if (e.ctrlKey && e.shiftKey && e.keyCode == "I".charCodeAt(0)) {
+          return false;
+        } // Ctrl+Maj+I
+        if (e.ctrlKey && e.shiftKey && e.keyCode == "J".charCodeAt(0)) {
+          return false;
+        } // Ctrl+Maj+J
+        if (e.ctrlKey && e.keyCode == "U".charCodeAt(0)) {
+          return false;
+        } // Ctrl+U (Code source)
+      };
+    </script>
+    <script src="https://cdn.kkiapay.me/k.js"></script>
+    <script src="app.js"></script>
   </body>
 </html>
