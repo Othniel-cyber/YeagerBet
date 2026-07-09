@@ -278,7 +278,34 @@
       </div>
     </div>
 
-    <script>
+    <script type="module">
+      // 1. Importation de Firebase et Firestore depuis le CDN officiel
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        getDocs,
+        query,
+        where,
+      } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+      // 2. Ta configuration officielle Firebase (générée sur ton tableau de bord)
+      const firebaseConfig = {
+        apiKey: "AIzaSyCjg83OlM_BgSftkAkCapGrwV-FMvNZyY",
+        authDomain: "yeagerbet-db.firebaseapp.com",
+        projectId: "yeagerbet-db",
+        storageBucket: "yeagerbet-db.firebasestorage.app",
+        messagingSenderId: "1036562277525",
+        appId: "1:1036562277525:web:61b4a09e5f93e7308f679c",
+        measurementId: "G-D5V2JVS5SV",
+      };
+
+      // 3. Initialisation
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      // --- Gestion de l'affichage des boîtes (Inchangé) ---
       const registerBox = document.getElementById("register-box");
       const loginBox = document.getElementById("login-box");
       const goToLogin = document.getElementById("go-to-login");
@@ -295,113 +322,117 @@
         registerBox.classList.remove("hidden");
       });
 
+      // --- INSCRIPTION VIA FIRESTORE ---
       document
         .getElementById("register-form")
-        .addEventListener("submit", (e) => {
+        .addEventListener("submit", async (e) => {
           e.preventDefault();
           const username = document.getElementById("reg-username").value.trim();
           const network = document.getElementById("reg-network").value;
           const phone = document.getElementById("reg-phone").value.trim();
           const password = document.getElementById("reg-password").value;
 
-          let accounts =
-            JSON.parse(localStorage.getItem("yb_registered_accounts")) || [];
-          if (accounts.some((acc) => acc.phone === phone)) {
-            alert("Ce numéro est déjà utilisé.");
-            return;
-          }
+          try {
+            // Référence à notre collection globale de comptes
+            const accountsRef = collection(db, "yb_registered_accounts");
 
-          // Sauvegarde avec le réseau choisi
-          accounts.push({ username, phone, password, network });
-          localStorage.setItem(
-            "yb_registered_accounts",
-            JSON.stringify(accounts),
-          );
+            // Requête cloud pour vérifier si le numéro existe déjà
+            const q = query(accountsRef, where("phone", "==", phone));
+            const querySnapshot = await getDocs(q);
 
-          // Log Admin
-          let adminUsers = JSON.parse(localStorage.getItem("yb_users")) || [];
-          let now = new Date();
-          adminUsers.push({
-            username,
-            phone: `${phone} [${network}]`,
-            dateJoin:
+            if (!querySnapshot.empty) {
+              alert("Ce numéro est déjà utilisé sur YeagerBet.");
+              return;
+            }
+
+            // Formatage de la date d'inscription
+            let now = new Date();
+            const dateString =
               now.toLocaleDateString("fr-FR") +
               " à " +
               now.toLocaleTimeString("fr-FR", {
                 hour: "2-digit",
                 minute: "2-digit",
-              }),
-          });
-          localStorage.setItem("yb_users", JSON.stringify(adminUsers));
+              });
 
-          alert("Compte créé !");
-          registerBox.classList.add("hidden");
-          loginBox.classList.remove("hidden");
-          document.getElementById("register-form").reset();
+            // Enregistrement centralisé dans la base de données Firestore
+            await addDoc(accountsRef, {
+              username,
+              phone,
+              password,
+              network,
+              dateJoin: dateString,
+              balance: 0, // On prépare le solde à 0 F CFA par défaut
+            });
+
+            alert("Votre compte YeagerBet a été créé avec succès !");
+            registerBox.classList.add("hidden");
+            loginBox.classList.remove("hidden");
+            document.getElementById("register-form").reset();
+          } catch (error) {
+            console.error("Erreur Firebase lors de l'inscription :", error);
+            alert("Une erreur est survenue lors de l'inscription. Réessayez.");
+          }
         });
 
-      document.getElementById("login-form").addEventListener("submit", (e) => {
-        e.preventDefault();
-        const phone = document.getElementById("login-phone").value.trim();
-        const password = document.getElementById("login-password").value;
-        let accounts =
-          JSON.parse(localStorage.getItem("yb_registered_accounts")) || [];
-        const verifiedAccount = accounts.find(
-          (acc) => acc.phone === phone && acc.password === password,
-        );
+      // --- CONNEXION VIA FIRESTORE ---
+      document
+        .getElementById("login-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const phone = document.getElementById("login-phone").value.trim();
+          const password = document.getElementById("login-password").value;
 
-        if (verifiedAccount) {
-          localStorage.setItem(
-            "yb_active_user",
-            JSON.stringify(verifiedAccount),
-          );
-          window.location.href = "dashboard.html";
-        } else {
-          alert("Ce compte n'existe pas ou informations erronées !");
-        }
-      });
+          try {
+            const accountsRef = collection(db, "yb_registered_accounts");
+
+            // Vérification si un compte possède ce numéro ET ce mot de passe exacts
+            const q = query(
+              accountsRef,
+              where("phone", "==", phone),
+              where("password", "==", password),
+            );
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+              // Récupération des infos du joueur trouvé
+              const userDoc = querySnapshot.docs[0];
+              const userData = userDoc.data();
+
+              // Stockage temporaire de la session active (pour le dashboard)
+              localStorage.setItem(
+                "yb_active_user",
+                JSON.stringify({
+                  id: userDoc.id,
+                  username: userData.username,
+                  phone: userData.phone,
+                  network: userData.network,
+                }),
+              );
+
+              window.location.href = "dashboard.html";
+            } else {
+              alert("Ce compte n'existe pas ou informations erronées !");
+            }
+          } catch (error) {
+            console.error("Erreur Firebase lors de la connexion :", error);
+            alert("Impossible de se connecter au serveur central.");
+          }
+        });
     </script>
+
     <script>
-      // 1. Bloquer le clic droit sur tout le site
+      // Protection du code source et de l'inspection (Inchangé)
       document.addEventListener("contextmenu", (event) =>
         event.preventDefault(),
       );
-
-      // 2. Bloquer les touches d'inspection (F12, Ctrl+Maj+I, Ctrl+Maj+J, Ctrl+U)
       document.onkeydown = function (e) {
-        if (e.keyCode == 123) {
+        if (e.keyCode == 123) return false;
+        if (e.ctrlKey && e.shiftKey && e.keyCode == "I".charCodeAt(0))
           return false;
-        } // F12
-        if (e.ctrlKey && e.shiftKey && e.keyCode == "I".charCodeAt(0)) {
+        if (e.ctrlKey && e.shiftKey && e.keyCode == "J".charCodeAt(0))
           return false;
-        } // Ctrl+Maj+I
-        if (e.ctrlKey && e.shiftKey && e.keyCode == "J".charCodeAt(0)) {
-          return false;
-        } // Ctrl+Maj+J
-        if (e.ctrlKey && e.keyCode == "U".charCodeAt(0)) {
-          return false;
-        } // Ctrl+U (Code source)
-      };
-
-      // 1. Bloquer le clic droit sur tout le site
-      document.addEventListener("contextmenu", (event) =>
-        event.preventDefault(),
-      );
-
-      // 2. Bloquer les touches d'inspection (F12, Ctrl+Maj+I, Ctrl+Maj+J, Ctrl+U)
-      document.onkeydown = function (e) {
-        if (e.keyCode == 123) {
-          return false;
-        } // F12
-        if (e.ctrlKey && e.shiftKey && e.keyCode == "I".charCodeAt(0)) {
-          return false;
-        } // Ctrl+Maj+I
-        if (e.ctrlKey && e.shiftKey && e.keyCode == "J".charCodeAt(0)) {
-          return false;
-        } // Ctrl+Maj+J
-        if (e.ctrlKey && e.keyCode == "U".charCodeAt(0)) {
-          return false;
-        } // Ctrl+U (Code source)
+        if (e.ctrlKey && e.keyCode == "U".charCodeAt(0)) return false;
       };
     </script>
   </body>

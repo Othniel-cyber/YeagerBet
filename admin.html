@@ -1,25 +1,9 @@
 <!doctype html>
 <html lang="fr">
   <head>
-    <script>
-      // VERROUILLAGE SÉCURITÉ ADMIN
-      (function () {
-        const motDePasseCorrect = "23/07/2010"; // Change ça par ton vrai mot de passe secret
-
-        // Demande le code secret dès l'accès à la page
-        const tentative = prompt(
-          "Accès restreint. Veuillez entrer le code administrateur YeagerBet :",
-        );
-
-        if (tentative !== motDePasseCorrect) {
-          alert("Accès refusé ! Redirection vers l'accueil...");
-          window.location.href = "index.html"; // Chasse le voleur vers l'accueil
-        }
-      })();
-    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>YeagerBet - HQ Administration</title>
+    <title>YeagerBet - HQ Administration Pro</title>
     <link rel="icon" type="image/png" href="logo.png" />
     <link
       rel="stylesheet"
@@ -28,539 +12,594 @@
 
     <style>
       :root {
-        --bg-main: #070b14;
-        --bg-card: #0d1627;
+        --bg-main: #040811;
+        --bg-card: #0b1220;
+        --bg-card-hover: #111a2e;
         --border-color: #1e293b;
+        --accent-cyan: #00e5ff;
+        --accent-neon: #39ff14;
+        --accent-pink: #ff0055;
         --text-main: #f8fafc;
         --text-muted: #64748b;
-        --accent-admin: #00ff88;
-        --success: #22c55e;
-        --danger: #ef4444;
-        --gold: #eab308;
       }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
       body {
         background-color: var(--bg-main);
         color: var(--text-main);
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        margin: 0;
-        padding: 20px;
-      }
-      .admin-header {
-        text-align: center;
-        margin-bottom: 30px;
-        border-bottom: 2px solid var(--border-color);
-        padding-bottom: 20px;
-      }
-      .admin-header h1 {
-        color: var(--accent-admin);
-        margin: 0;
-        font-size: 2rem;
-      }
-      .grid-stats {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 15px;
-        margin-bottom: 30px;
-      }
-      .stat-card {
-        background: var(--bg-card);
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        padding: 20px;
-        text-align: center;
-      }
-      .stat-card h3 {
-        margin: 0 0 10px 0;
-        font-size: 0.9rem;
-        color: var(--text-muted);
-        text-transform: uppercase;
-      }
-      .stat-card .value {
-        font-size: 1.6rem;
-        font-weight: bold;
-      }
-      .value.green {
-        color: var(--success);
-      }
-      .value.red {
-        color: var(--danger);
-      }
-      .value.gold {
-        color: var(--gold);
+        min-height: 100vh;
+        overflow-x: hidden;
       }
 
-      .panel-container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-      }
-      @media (max-width: 768px) {
-        .panel-container {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      .panel {
-        background: var(--bg-card);
-        border: 1px solid var(--border-color);
-        border-radius: 8px;
-        padding: 20px;
-      }
-      .panel h2 {
-        font-size: 1.2rem;
-        margin-top: 0;
-        color: var(--accent-admin);
-        border-bottom: 1px solid var(--border-color);
-        padding-bottom: 10px;
-      }
-      .log-box {
-        max-height: 300px;
-        overflow-y: auto;
-      }
-
-      /* STYLE CORRIGÉ POUR ACCUEILLIR LES BOUTONS DE BLOCAGE */
-      .log-item {
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        padding: 12px !important;
-        border-bottom: 1px solid var(--border-color) !important;
-        font-size: 0.85rem;
-      }
-      .log-details {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-      .badge {
-        background: #1e293b;
-        padding: 5px 8px;
-        border-radius: 4px;
-        color: var(--accent-admin);
-      }
-
-      .notification-box {
-        grid-column: 1 / -1;
-        background: #0a101d;
-        border: 2px solid #10b981;
-        border-radius: 8px;
-        padding: 20px;
-        margin-top: 20px;
-      }
-      .notification-box h2 {
-        color: #10b981;
-        margin-top: 0;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-      .notif-item {
-        padding: 12px;
-        border-left: 4px solid var(--accent-admin);
-        background: #0f172a;
-        margin-bottom: 8px;
-        border-radius: 4px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: 0.9rem;
-      }
-      .notif-item.notif-inscription {
-        border-left-color: #3b82f6;
-      }
-      .notif-item.notif-gain {
-        border-left-color: var(--success);
-      }
-      .notif-item.notif-perte {
-        border-left-color: var(--danger);
-      }
-
-      .lock-screen {
+      /* --- VERROUILLAGE OVERLAY --- */
+      #admin-login-overlay {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: var(--bg-main);
+        background: radial-gradient(circle, #0b1220 0%, #040811 100%);
         display: flex;
-        flex-direction: column;
         justify-content: center;
         align-items: center;
         z-index: 9999;
+        transition:
+          opacity 0.5s ease,
+          visibility 0.5s ease;
       }
-      .lock-screen input {
+
+      #admin-login-overlay.hidden {
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .login-box {
         background: var(--bg-card);
+        padding: 40px;
+        border-radius: 16px;
+        border: 2px solid var(--accent-cyan);
+        box-shadow: 0 0 30px rgba(0, 229, 255, 0.2);
+        text-align: center;
+        width: 100%;
+        max-width: 400px;
+      }
+
+      .login-box h2 {
+        color: var(--accent-cyan);
+        margin-bottom: 25px;
+        font-size: 1.8rem;
+        letter-spacing: 2px;
+      }
+
+      .login-box input {
+        width: 100%;
+        padding: 12px 20px;
+        background: #040811;
         border: 1px solid var(--border-color);
-        color: #fff;
-        padding: 12px;
-        border-radius: 6px;
+        border-radius: 8px;
+        color: white;
         font-size: 1.1rem;
         text-align: center;
+        margin-bottom: 20px;
         outline: none;
+        transition: 0.3s;
+      }
+
+      .login-box input:focus {
+        border-color: var(--accent-cyan);
+        box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+      }
+
+      .login-box button {
+        background: linear-gradient(45deg, var(--accent-cyan), #0086ff);
+        color: #040811;
+        border: none;
+        padding: 12px 30px;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 1rem;
+        letter-spacing: 1px;
+        transition: 0.3s;
+      }
+
+      .login-box button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 229, 255, 0.4);
+      }
+
+      /* --- HEADER & DASHBOARD --- */
+      header {
+        background: var(--bg-card);
+        padding: 20px 40px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      header h1 {
+        font-size: 1.5rem;
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      header h1 span {
+        color: var(--accent-cyan);
+      }
+
+      .main-container {
+        padding: 40px;
+        max-width: 1600px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+      }
+
+      /* --- GRID DES STATISTIQUES --- */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+      }
+
+      .stat-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 25px;
+        position: relative;
+        overflow: hidden;
+        transition: 0.3s;
+      }
+
+      .stat-card:hover {
+        border-color: var(--accent-cyan);
+        transform: translateY(-3px);
+      }
+
+      .stat-card h3 {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        letter-spacing: 1px;
+      }
+
+      .stat-card .value {
+        font-size: 2rem;
+        font-weight: bold;
+      }
+
+      .stat-card .icon-bg {
+        position: absolute;
+        right: 20px;
+        bottom: 15px;
+        font-size: 3rem;
+        color: rgba(255, 255, 255, 0.03);
+      }
+
+      .btn-details {
+        background: transparent;
+        border: 1px solid var(--accent-cyan);
+        color: var(--accent-cyan);
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        cursor: pointer;
         margin-top: 15px;
+        transition: 0.3s;
+      }
+
+      .btn-details:hover {
+        background: var(--accent-cyan);
+        color: var(--bg-main);
+      }
+
+      /* --- SECTION PANNEAUX INFERIEURS --- */
+      .panels-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 30px;
+      }
+
+      @media (max-width: 1024px) {
+        .panels-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .panel-box {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 25px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .panel-box h2 {
+        font-size: 1.2rem;
+        color: var(--text-main);
+        border-left: 4px solid var(--accent-cyan);
+        padding-left: 10px;
+      }
+
+      /* --- TABLEAU DES JOUEURS --- */
+      .table-wrapper {
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+      }
+
+      th,
+      td {
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      th {
+        color: var(--text-muted);
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      tr:hover td {
+        background: rgba(255, 255, 255, 0.01);
+      }
+
+      .user-badge {
+        color: var(--accent-cyan);
+        font-weight: bold;
+      }
+
+      .network-tag {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.85rem;
+      }
+
+      /* --- LIVE LOGS ET NOTIFICATIONS --- */
+      .logs-container {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        max-height: 400px;
+        overflow-y: auto;
+        padding-right: 5px;
+      }
+
+      .log-card {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        border-left: 3px solid var(--border-color);
+      }
+
+      .log-card.join {
+        border-left-color: var(--accent-cyan);
+      }
+      .log-card.depot {
+        border-left-color: var(--accent-neon);
+      }
+      .log-card.retrait {
+        border-left-color: var(--accent-pink);
+      }
+
+      .log-header {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.85rem;
+      }
+      .log-time {
+        color: var(--text-muted);
+      }
+      .log-body {
+        font-size: 0.95rem;
+      }
+
+      /* Modals / Sections Cachées */
+      .hidden {
+        display: none !important;
       }
     </style>
   </head>
   <body>
-    <div id="security-gate" class="lock-screen">
-      <h1 style="color: #00ff88">
-        <i class="fa-solid fa-lock"></i> YeagerBet HQ Admin
-      </h1>
-      <p style="color: #64748b">Entrez le code d'accès administrateur</p>
-      <input
-        type="password"
-        id="admin-pass-input"
-        placeholder="••••••••"
-        autocomplete="off"
-      />
+    <div id="admin-login-overlay">
+      <div class="login-box">
+        <h2>CONNEXION ADMIN</h2>
+        <input
+          type="password"
+          id="admin-password"
+          placeholder="Entrez le code secret"
+        />
+        <button onclick="validateAdminLogin()">ACCÉDER AU DASHBOARD</button>
+      </div>
     </div>
 
-    <div id="admin-content" style="display: none">
-      <div class="admin-header">
-        <h1>
-          <i class="fa-solid fa-gears"></i> PANNEAU DE CONTRÔLE CONSOLE GENERALE
-        </h1>
-        <p style="color: var(--text-muted); margin: 5px 0 0 0">
-          Flux réels de production de la plateforme (Données virtuelles
-          nettoyées)
-        </p>
+    <header>
+      <h1>
+        <i class="fa-solid fa-shield-halved"></i> YeagerBet —
+        <span>HQ PANEL</span>
+      </h1>
+      <div style="font-size: 0.9rem; color: var(--text-muted)">
+        Statut Serveur :
+        <span style="color: var(--accent-neon); font-weight: bold"
+          >● ONLINE</span
+        >
+      </div>
+    </header>
+
+    <div class="main-container">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>Total Joueurs Inscrits</h3>
+          <div class="value" id="total-users-count">0</div>
+          <button class="btn-details" onclick="toggleUsersPanel()">
+            <i class="fa-solid fa-eye"></i> Afficher la liste
+          </button>
+          <div class="icon-bg"><i class="fa-solid fa-users"></i></div>
+        </div>
+
+        <div class="stat-card">
+          <h3>Compte Principal (KKiaPay Cloud)</h3>
+          <div
+            class="value"
+            id="main-balance"
+            style="color: var(--accent-cyan)"
+          >
+            0 F CFA
+          </div>
+          <div class="icon-bg"><i class="fa-solid fa-wallet"></i></div>
+        </div>
+
+        <div class="stat-card">
+          <h3>Total Perdu (Bénéfice Central)</h3>
+          <div class="value" id="total-lost" style="color: var(--accent-neon)">
+            0 F CFA
+          </div>
+          <div class="icon-bg"><i class="fa-solid fa-chart-line"></i></div>
+        </div>
+
+        <div class="stat-card">
+          <h3>Total Gagné (Sorties Joueurs)</h3>
+          <div class="value" id="total-won" style="color: var(--accent-pink)">
+            0 F CFA
+          </div>
+          <div class="icon-bg">
+            <i class="fa-solid fa-money-bill-transfer"></i>
+          </div>
+        </div>
       </div>
 
-      <div class="grid-stats">
-        <div class="stat-card">
-          <h3>Membres Inscrits</h3>
-          <div class="value gold" id="stat-count-users">0</div>
+      <div class="panels-grid">
+        <div class="panel-box" id="users-list-panel">
+          <h2>Base de Données Globale (Cloud Firestore)</h2>
+          <div class="table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>N°</th>
+                  <th>Pseudo Joueur</th>
+                  <th>Numéro Mobile</th>
+                  <th>Réseau</th>
+                  <th>Date d'adhésion</th>
+                </tr>
+              </thead>
+              <tbody id="admin-user-table">
+                <tr>
+                  <td
+                    colspan="5"
+                    style="
+                      text-align: center;
+                      color: var(--text-muted);
+                      padding: 20px;
+                    "
+                  >
+                    Chargement du Cloud Firebase...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-        <div class="stat-card">
-          <h3>Total Dépôts</h3>
-          <div class="value green" id="stat-total-deposits">0 F</div>
-        </div>
-        <div class="stat-card">
-          <h3>Gains Joueurs</h3>
-          <div class="value red" id="stat-gains-joueurs">0 F</div>
-        </div>
-        <div class="stat-card">
-          <h3>Compte Principal (Profit Site)</h3>
-          <div class="value green" id="stat-main-account">0 F</div>
-        </div>
-      </div>
 
-      <div class="panel-container">
-        <div class="panel">
-          <h2><i class="fa-solid fa-users"></i> Journal des Inscriptions</h2>
-          <div class="log-box" id="admin-users-logs"></div>
-        </div>
-        <div class="panel">
-          <h2>
-            <i class="fa-solid fa-money-bill-transfer"></i> Flux Financier Des
-            Jeux
-          </h2>
-          <div class="log-box" id="admin-financial-logs"></div>
-        </div>
-
-        <div class="panel notification-box">
-          <h2>
-            <i class="fa-solid fa-bell"></i> NOTIFICATIONS GLOBAL EN TEMPS RÉEL
-          </h2>
-          <div class="log-box" id="admin-global-notifications">
-            <div style="color: #64748b; text-align: center; padding: 20px">
-              Aucune activité détectée. En attente des inscriptions des amis...
+        <div class="panel-box">
+          <h2>Activités Cloud en Temps Réel</h2>
+          <div class="logs-container" id="admin-live-logs">
+            <div
+              style="
+                color: var(--text-muted);
+                text-align: center;
+                padding-top: 20px;
+              "
+            >
+              Aucun mouvement récent détecté.
             </div>
           </div>
         </div>
       </div>
-      <div
-        class="admin-card"
-        style="
-          margin-top: 20px;
-          background: #0d1627;
-          border: 1px solid #1e293b;
-          padding: 20px;
-          border-radius: 8px;
-        "
-      >
-        <h3 style="color: #00e5ff; margin-top: 0">
-          <i class="fa-solid fa-ticket"></i> Générateur de Codes de Recharge
-          Auto
-        </h3>
-        <div style="display: flex; gap: 10px; margin-bottom: 15px">
-          <input
-            type="number"
-            id="v-amount"
-            placeholder="Montant (ex: 500)"
-            style="
-              background: #070b14;
-              border: 1px solid #1e293b;
-              color: #fff;
-              padding: 8px;
-              border-radius: 4px;
-              flex: 1;
-            "
-          />
-          <input
-            type="text"
-            id="v-code"
-            placeholder="Code Secret (ou laisser vide pour auto)"
-            style="
-              background: #070b14;
-              border: 1px solid #1e293b;
-              color: #fff;
-              padding: 8px;
-              border-radius: 4px;
-              flex: 1;
-            "
-          />
-          <button
-            id="btn-generate-voucher"
-            style="
-              background: #00e5ff;
-              color: #070b14;
-              border: none;
-              padding: 8px 15px;
-              font-weight: bold;
-              border-radius: 4px;
-              cursor: pointer;
-            "
-          >
-            Créer le code
-          </button>
-        </div>
-
-        <div style="max-height: 200px; overflow-y: auto; font-size: 0.9rem">
-          <table
-            style="width: 100%; border-collapse: collapse; text-align: left"
-          >
-            <thead>
-              <tr style="color: #64748b; border-bottom: 1px solid #1e293b">
-                <th style="padding: 5px">Code</th>
-                <th>Montant</th>
-                <th>Statut</th>
-              </tr>
-            </thead>
-            <tbody id="admin-vouchers-table-body" style="color: #fff"></tbody>
-          </table>
-        </div>
-      </div>
     </div>
 
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+      import {
+        getFirestore,
+        collection,
+        onSnapshot,
+      } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+      // Configuration officielle YeagerBet Cloud
+      const firebaseConfig = {
+        apiKey: "AIzaSyCjg83OlM_BgSftkAkCapGrwV-FMvNZyY",
+        authDomain: "yeagerbet-db.firebaseapp.com",
+        projectId: "yeagerbet-db",
+        storageBucket: "yeagerbet-db.firebasestorage.app",
+        messagingSenderId: "1036562277525",
+        appId: "1:1036562277525:web:61b4a09e5f93e7308f679c",
+        measurementId: "G-D5V2JVS5SV",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+
+      // --- LOGIQUE SECRETE DOUBLE-VERROU OVERLAY ---
+      window.validateAdminLogin = function () {
+        const passwordInput = document.getElementById("admin-password").value;
+        if (passwordInput === "23/07/2010") {
+          document
+            .getElementById("admin-login-overlay")
+            .classList.add("hidden");
+        } else {
+          alert("Mot de passe incorrect ! Access HQ Refusé.");
+        }
+      };
+
+      // --- BOUTON TOGGLE DETAILS POUR ENLEVER/AFFICHER LE TABLEAU ---
+      window.toggleUsersPanel = function () {
+        const panel = document.getElementById("users-list-panel");
+        panel.classList.toggle("hidden");
+      };
+
+      // --- ÉCOUTEUR CLOUD FIRESTORE SYNCHRONISÉ SANS APPAREIL PHYSIQUE REQUIS ---
+      const userTableBody = document.getElementById("admin-user-table");
+      const liveLogsContainer = document.getElementById("admin-live-logs");
+
+      // Calculs financiers d'initialisation (Liés virtuellement au solde cloud)
+      let currentBalance = 50000; // Solde de base KKiaPay simulé
+      let accumulatedLost = 0;
+      let accumulatedWon = 0;
+
+      onSnapshot(collection(db, "yb_registered_accounts"), (snapshot) => {
+        if (userTableBody) {
+          userTableBody.innerHTML = "";
+          liveLogsContainer.innerHTML = ""; // Rafraîchit aussi les logs d'inscriptions
+
+          if (snapshot.empty) {
+            userTableBody.innerHTML =
+              '<tr><td colspan="5" style="text-align:center; padding:20px; color:var(--text-muted);">Aucun joueur inscrit dans la base cloud.</td></tr>';
+            liveLogsContainer.innerHTML =
+              '<div style="color:var(--text-muted); text-align:center;">En attente de nouvelles inscriptions...</div>';
+          } else {
+            let index = 1;
+
+            snapshot.forEach((doc) => {
+              const user = doc.data();
+
+              // 1. Ajouter la ligne dans le tableau
+              const row = document.createElement("tr");
+              row.innerHTML = `
+                <td>${index++}</td>
+                <td><span class="user-badge">${user.username || "Joueur"}</span></td>
+                <td>${user.phone || "N/A"}</td>
+                <td><span class="network-tag">${user.network || "GSM"}</span></td>
+                <td><i class="fa-regular fa-clock"></i> ${user.dateJoin || "Récemment"}</td>
+              `;
+              userTableBody.appendChild(row);
+
+              // 2. Générer une notification d'inscription stylée en direct
+              const logCard = document.createElement("div");
+              logCard.className = "log-card join";
+              logCard.innerHTML = `
+                <div class="log-header">
+                  <span style="color:var(--accent-cyan); font-weight:bold;"><i class="fa-solid fa-user-plus"></i> Inscription Joueur</span>
+                  <span class="log-time">${user.dateJoin || "En direct"}</span>
+                </div>
+                <div class="log-body">Le joueur <b>${user.username}</b> (${user.phone}) vient de rejoindre YeagerBet.</div>
+              `;
+              liveLogsContainer.appendChild(logCard);
+            });
+          }
+
+          // Mise à jour instantanée du compteur global
+          document.getElementById("total-users-count").innerText =
+            snapshot.size;
+        }
+      });
+
+      // --- SYSTEME DE LOGS SIMULÉ POUR DÉPOTS, RETRAITS ET COMPTE PRINCIPAL ---
+      // (Ces fonctions seront alimentées automatiquement par ton système de paiement et le script de tes jeux)
+      window.simulerFluxFinancier = function (type, joueur, montant) {
+        const logCard = document.createElement("div");
+        let now = new Date().toLocaleTimeString("fr-FR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+
+        if (type === "depot") {
+          currentBalance += montant;
+          logCard.className = "log-card depot";
+          logCard.innerHTML = `
+            <div class="log-header"><span style="color:var(--accent-neon);"><i class="fa-solid fa-arrow-down-long"></i> DÉPÔT KKiapay</span><span class="log-time">${now}</span></div>
+            <div class="log-body">Flux entrant : +<b>${montant} F CFA</b> de <b>${joueur}</b>.</div>`;
+        } else if (type === "retrait") {
+          currentBalance -= montant;
+          logCard.className = "log-card retrait";
+          logCard.innerHTML = `
+            <div class="log-header"><span style="color:var(--accent-pink);"><i class="fa-solid fa-arrow-up-long"></i> RETRAIT Demandé</span><span class="log-time">${now}</span></div>
+            <div class="log-body">Flux sortant : -<b>${montant} F CFA</b> transféré à <b>${joueur}</b>.</div>`;
+        } else if (type === "perte_jeu") {
+          accumulatedLost += montant;
+          currentBalance += montant; // Le joueur perd, l'argent s'ajoute à ton compte principal
+          logCard.className = "log-card depot";
+          logCard.innerHTML = `
+            <div class="log-header"><span style="color:var(--accent-neon);"><i class="fa-solid fa-dice"></i> Gain Plateforme</span><span class="log-time">${now}</span></div>
+            <div class="log-body">Le joueur <b>${joueur}</b> a perdu son pari. +<b>${montant} F CFA</b> ajoutés au QG.</div>`;
+        } else if (type === "gain_jeu") {
+          accumulatedWon += montant;
+          currentBalance -= montant; // Le joueur gagne, l'argent quitte ton compte principal
+          logCard.className = "log-card retrait";
+          logCard.innerHTML = `
+            <div class="log-header"><span style="color:var(--accent-pink);"><i class="fa-solid fa-trophy"></i> Perte Plateforme</span><span class="log-time">${now}</span></div>
+            <div class="log-body">Le joueur <b>${joueur}</b> a gagné son pari. -<b>${montant} F CFA</b> retirés du QG.</div>`;
+        }
+
+        liveLogsContainer.prepend(logCard);
+        document.getElementById("main-balance").innerText =
+          currentBalance + " F CFA";
+        document.getElementById("total-lost").innerText =
+          accumulatedLost + " F CFA";
+        document.getElementById("total-won").innerText =
+          accumulatedWon + " F CFA";
+      };
+
+      // Rafraîchissement graphique des montants de base au départ
+      document.getElementById("main-balance").innerText =
+        currentBalance + " F CFA";
+    </script>
+
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const btnGen = document.getElementById("btn-generate-voucher");
-        if (btnGen) {
-          btnGen.addEventListener("click", () => {
-            const amount = parseInt(document.getElementById("v-amount").value);
-            let code = document
-              .getElementById("v-code")
-              .value.trim()
-              .toUpperCase();
-
-            if (!amount || amount < 100) {
-              alert("Veuillez entrer un montant valide.");
-              return;
-            }
-
-            // Si aucun code n'est écrit, on en génère un au hasard (ex: YB-4892-XF)
-            if (!code) {
-              code =
-                "YB-" +
-                Math.floor(1000 + Math.random() * 9000) +
-                "-" +
-                Math.random().toString(36).substring(2, 4).toUpperCase();
-            }
-
-            let vouchers =
-              JSON.parse(localStorage.getItem("yb_admin_vouchers")) || [];
-
-            vouchers.unshift({
-              code: code,
-              amount: amount,
-              used: false,
-              usedBy: null,
-              dateUsed: null,
-            });
-
-            localStorage.setItem("yb_admin_vouchers", JSON.stringify(vouchers));
-            document.getElementById("v-code").value = "";
-            renderAdminVouchers();
-          });
-        }
-        renderAdminVouchers();
-      });
-
-      function renderAdminVouchers() {
-        const tbody = document.getElementById("admin-vouchers-table-body");
-        if (!tbody) return;
-
-        let vouchers =
-          JSON.parse(localStorage.getItem("yb_admin_vouchers")) || [];
-        tbody.innerHTML = "";
-
-        if (vouchers.length === 0) {
-          tbody.innerHTML =
-            '<tr><td colspan="3" style="color:#64748b; text-align:center; padding:10px;">Aucun code disponible.</td></tr>';
-          return;
-        }
-
-        vouchers.forEach((v) => {
-          const tr = document.createElement("tr");
-          tr.style.borderBottom = "1px solid #0d1627";
-          tr.innerHTML = `
-            <td style="padding:6px; font-family:monospace; color:#00e5ff;">${v.code}</td>
-            <td style="color:#22c55e; font-weight:bold;">${v.amount} F</td>
-            <td>${v.used ? `<span style="color:#64748b;">Utilisé par ${v.usedBy}</span>` : '<span style="color:#eab308; font-weight:bold;">Disponible</span>'}</td>
-        `;
-          tbody.appendChild(tr);
-        });
-      }
-      // Écouter les changements pour mettre à jour la table
-      window.addEventListener("storage", renderAdminVouchers);
-      const targetPass = "23/07/2010";
-      const gate = document.getElementById("security-gate");
-      const content = document.getElementById("admin-content");
-      const passInput = document.getElementById("admin-pass-input");
-
-      passInput.addEventListener("input", () => {
-        if (passInput.value === targetPass) {
-          gate.style.display = "none";
-          content.style.display = "block";
-          loadAdminData();
-        }
-      });
-
-      // ACTION DE BLOCAGE DE COMPTE JOUEUR
-      function toggleBlockUser(phone) {
-        let users =
-          JSON.parse(localStorage.getItem("yb_registered_accounts")) || [];
-        let userIndex = users.findIndex((u) => u.phone === phone);
-
-        if (userIndex !== -1) {
-          users[userIndex].isBlocked = !users[userIndex].isBlocked;
-          localStorage.setItem("yb_registered_accounts", JSON.stringify(users));
-
-          let activeUser = JSON.parse(localStorage.getItem("yb_active_user"));
-          if (activeUser && activeUser.phone === phone) {
-            activeUser.isBlocked = users[userIndex].isBlocked;
-            localStorage.setItem("yb_active_user", JSON.stringify(activeUser));
-          }
-          loadAdminData();
-        }
-      }
-
-      function loadAdminData() {
-        const users =
-          JSON.parse(localStorage.getItem("yb_registered_accounts")) || [];
-        const transactions =
-          JSON.parse(localStorage.getItem("yb_transactions")) || [];
-        const notifications =
-          JSON.parse(localStorage.getItem("yb_admin_notifications")) || [];
-
-        let totalDeposits = 0;
-        let totalGainsJoueurs = 0;
-        let totalPertesJoueurs = 0;
-
-        transactions.forEach((tx) => {
-          if (tx.type === "depot") totalDeposits += tx.amount;
-          if (tx.type === "gain") totalGainsJoueurs += tx.amount;
-          if (tx.type === "perte") totalPertesJoueurs += tx.amount;
-        });
-
-        let comptePrincipal = totalPertesJoueurs - totalGainsJoueurs;
-
-        if (document.getElementById("stat-count-users"))
-          document.getElementById("stat-count-users").innerText = users.length;
-        if (document.getElementById("stat-total-deposits"))
-          document.getElementById("stat-total-deposits").innerText =
-            totalDeposits.toLocaleString("fr-FR") + " F";
-        if (document.getElementById("stat-gains-joueurs"))
-          document.getElementById("stat-gains-joueurs").innerText =
-            totalGainsJoueurs.toLocaleString("fr-FR") + " F";
-
-        const mainAccEl = document.getElementById("stat-main-account");
-        if (mainAccEl) {
-          mainAccEl.innerText = comptePrincipal.toLocaleString("fr-FR") + " F";
-          mainAccEl.className =
-            comptePrincipal >= 0 ? "value green" : "value red";
-        }
-
-        // INJECTION DES COMPTES AVEC BOUTON DE BLOCAGE VISIBLE ET ALIGNÉ
-        const userContainer = document.getElementById("admin-users-logs");
-        if (userContainer) {
-          userContainer.innerHTML = "";
-          if (users.length === 0) {
-            userContainer.innerHTML =
-              '<div style="color: #64748b; text-align:center; padding-top:20px;">Aucun compte enregistré pour le moment.</div>';
-          } else {
-            users.forEach((u) => {
-              const item = document.createElement("div");
-              item.className = "log-item";
-
-              let isBlocked = u.isBlocked || false;
-              let btnText = isBlocked
-                ? '<i class="fa-solid fa-unlock"></i> Débloquer'
-                : '<i class="fa-solid fa-ban"></i> Bloquer';
-              let btnColor = isBlocked ? "#22c55e" : "#ef4444";
-              let statusBadge = isBlocked
-                ? ' <span style="color:#ef4444; font-size:0.75rem; font-weight:bold;">[BLOQUÉ]</span>'
-                : "";
-
-              item.innerHTML = `
-                            <div class="log-details">
-                                <span class="badge"><i class="fa-solid fa-user-check"></i></span> 
-                                <div>
-                                    Pseudo : <strong>${u.username}</strong> (${u.phone || "Pas de numéro"})${statusBadge}
-                                    <div style="color:#64748b; font-size:0.75rem; margin-top:2px;">Rejoint le : ${u.dateJoin || "En attente"}</div>
-                                </div>
-                            </div>
-                            <div>
-                                <button onclick="toggleBlockUser('${u.phone}')" style="background:${btnColor}; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem; font-weight:bold; display:flex; align-items:center; gap:5px;">
-                                    ${btnText}
-                                </button>
-                            </div>
-                        `;
-              userContainer.appendChild(item);
-            });
-          }
-        }
-
-        const financialContainer = document.getElementById(
-          "admin-financial-logs",
-        );
-        if (financialContainer) {
-          financialContainer.innerHTML = "";
-          if (transactions.length === 0) {
-            financialContainer.innerHTML =
-              '<div style="color: #64748b; text-align:center; padding-top:20px;">Aucun mouvement financier enregistré.</div>';
-          } else {
-            transactions.forEach((tx) => {
-              const item = document.createElement("div");
-              item.className = "log-item";
-              let sign = tx.type === "gain" || tx.type === "depot" ? "+" : "-";
-              let color =
-                tx.type === "gain" || tx.type === "depot"
-                  ? "#22c55e"
-                  : "#ef4444";
-              item.innerHTML = `<div>${tx.username} (${tx.type.toUpperCase()})</div><div style="color:${color}; font-weight:bold;">${sign} ${tx.amount} F</div>`;
-              financialContainer.appendChild(item);
-            });
-          }
-        }
-
-        const notifContainer = document.getElementById(
-          "admin-global-notifications",
-        );
-        if (notifContainer) {
-          if (notifications.length > 0) {
-            notifContainer.innerHTML = "";
-            notifications.forEach((n) => {
-              const boxNotif = document.createElement("div");
-              boxNotif.className = `notif-item notif-${n.type}`;
-              boxNotif.innerHTML = `<div><i class="fa-solid fa-circle-info"></i> ${n.text}</div><div style="color:#64748b; font-size:0.8rem; margin-left:15px;">${n.time}</div>`;
-              notifContainer.appendChild(boxNotif);
-            });
-          }
-        }
-      }
-      window.addEventListener("storage", loadAdminData);
+      // Protection anti-inspection renforcée pour le QG Admin
+      document.addEventListener("contextmenu", (event) =>
+        event.preventDefault(),
+      );
+      document.onkeydown = function (e) {
+        if (e.keyCode == 123) return false;
+        if (e.ctrlKey && e.shiftKey && e.keyCode == "I".charCodeAt(0))
+          return false;
+        if (e.ctrlKey && e.shiftKey && e.keyCode == "J".charCodeAt(0))
+          return false;
+        if (e.ctrlKey && e.keyCode == "U".charCodeAt(0)) return false;
+      };
     </script>
   </body>
 </html>
