@@ -15,6 +15,18 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body class="dashboard-body">
+    <div id="ecran-chargement" class="fond-chargement">
+  <div class="contenu-chargement">
+    <div class="logo-anime">
+      <i class="fa-solid fa-bolt-lightning"></i>
+    </div>
+    <h2 class="nom-site">YEAGER<span>BET</span></h2>
+    <div class="barre-grise">
+      <div class="ma-progression"></div>
+    </div>
+    <p class="petit-message">Connexion au serveur sécurisé...</p>
+  </div>
+</div>
     <header class="navbar">
       <div class="nav-left">
         <h1 class="logo-dash">
@@ -1685,6 +1697,39 @@
       </div>
     </footer>
     <script>
+      // --- SCRIPT DE CHARGEMENT INTELLIGENT ---
+window.addEventListener('DOMContentLoaded', () => {
+  const barre = document.querySelector('.ma-progression');
+  const message = document.querySelector('.petit-message');
+  
+  // Étape 1 : Le code commence à lire la page (0% à 40%)
+  barre.style.width = '40%';
+  message.textContent = 'Connexion au serveur sécurisé...';
+
+  // Étape 2 : Quand toute la page (images, styles, connexion internet) est chargée
+  window.addEventListener('load', () => {
+    barre.style.width = '75%';
+    message.textContent = 'Vérification des données du compte...';
+
+    // Étape 3 : Simulation de récupération des données Firebase
+    // Plus la connexion est lente, plus le joueur attendra ici
+    setTimeout(() => {
+      barre.style.width = '100%';
+      message.textContent = 'Synchronisation réussie !';
+
+      // Étape 4 : On cache l'écran de chargement proprement
+      setTimeout(() => {
+        const loader = document.getElementById('ecran-chargement');
+        loader.style.opacity = '0';
+        
+        setTimeout(() => {
+          loader.style.display = 'none';
+        }, 500);
+      }, 600); // Petit temps pour voir la barre à 100%
+
+    }, 1200); // Temps de calcul pour simuler la BDD (1.2 seconde)
+  });
+});
       // 1. Bloquer le clic droit sur tout le site
       document.addEventListener("contextmenu", (event) =>
         event.preventDefault(),
